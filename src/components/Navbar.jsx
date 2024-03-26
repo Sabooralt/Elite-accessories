@@ -48,7 +48,7 @@ export default function Header() {
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <InputLeftAddon bg={"transparent"} border={0} _hover={0}>
+            <InputLeftAddon bg={"transparent"} border={0} _hover={0} >
               <FontAwesomeIcon />
             </InputLeftAddon>
             <Input

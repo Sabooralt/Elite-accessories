@@ -16,6 +16,7 @@ import Reviews from './pages/Reviews.jsx'
 import RootLayout from './layouts/RootLayout.jsx'
 import NotFound from './pages/NotFound.jsx'
 
+
 const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<RootLayout/>}>

@@ -3,7 +3,7 @@ body {
     background-repeat: no-repeat !important;
     background-position: center !important;
     background-size: cover !important; */
-  height: 100vh;
+ 
 }
 
 a.active > button {
@@ -12,4 +12,8 @@ a.active > button {
   
   left: 10px;
   font-size: 1.6rem;
+}
+@font-face {
+    font-family: Poppins;
+    src: url('../public/fonts/Poppins/Poppins-Regular.ttf');
 }

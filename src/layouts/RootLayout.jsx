@@ -11,8 +11,6 @@ export default function RootLayout() {
         <Header/>
 </header>
 
-        <Heading as={'h2'}>Root Layout</Heading>
-
 
 <main>
     <Outlet/>
