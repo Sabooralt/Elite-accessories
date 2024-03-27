@@ -24,6 +24,11 @@ const theme = extendTheme({
     cardShadow: '6px 9px 0px 1px #323030',
   },
 
+  radii:{
+      customA: '17.45px',
+      customB: '50px'
+  },
+
  styles : {
   global: {
     body: {

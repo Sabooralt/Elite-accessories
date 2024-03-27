@@ -40,7 +40,7 @@ export default function Login_Signup() {
             bg={"secondary"}
             fontSize={"large"}
             fontWeight={700}
-            borderRadius={15}
+            borderRadius={'customA'}
             px={8}
             py={1}
           >
@@ -54,7 +54,7 @@ export default function Login_Signup() {
         <VStack mt={5} spacing={4}>
           <GlobalButton
           bg={'greyLight'}
-           borderRadius={15}
+           borderRadius={'customA'}
             pl={1}
             py={2}
             leftIcon={
@@ -101,7 +101,7 @@ export default function Login_Signup() {
           <GlobalButton
           fontSize={'0.95rem'}
           bg={'greyLight'}
-          borderRadius={15}
+          borderRadius={'customA'}
             pl={1}
             pr={2}
             py={2}

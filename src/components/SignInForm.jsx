@@ -25,7 +25,7 @@ export default function SignInForm() {
                 size={"lg"}
                 bg={"#D9D9D9"}
                 textAlign={"center"}
-                borderRadius={15}
+                borderRadius={'customA'}
                 placeholder={"Email or Phone Number"}
                 boxShadow={"customShadow"}
                 border={"1px solid #000"}
@@ -43,7 +43,7 @@ export default function SignInForm() {
                 size={"lg"}
                 textAlign={"center"}
                 placeholder="Password"
-                borderRadius={15}
+                borderRadius={'customA'}
                 boxShadow={"customShadow"}
                 border={"1px solid #000"}
               ></Input>
@@ -59,7 +59,7 @@ export default function SignInForm() {
             fontSize={"xx-large"}
            
             py="6"
-            borderRadius={17}
+            borderRadius={'customA'}
           >
             Access Your Account
           </GlobalButton>
