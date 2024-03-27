@@ -1,8 +1,5 @@
 body {
-  /*  background: rgba(255, 255, 255, 0.5),url('../public/cover.jpeg') !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-    background-size: cover !important; */
+  height: 100%;
  
 }
 
@@ -17,3 +14,36 @@ a.active > button {
     font-family: Poppins;
     src: url('../public/fonts/Poppins/Poppins-Regular.ttf');
 }
+::placeholder {
+color: #00000030 !important;
+font-size: 1.5rem;
+font-weight: 500;
+}
+
+/* Carousel CSS */
+.custom-swiper-btns{
+    padding: 0 5px;
+    width: 100%;
+    background-color: transparent;
+    position: absolute;
+    top: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9;
+    left: 0;
+}
+.custom-prev{
+
+}
+.custom-next,.custom-prev{
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   height: 50px;
+    width: 50px;
+
+}
+

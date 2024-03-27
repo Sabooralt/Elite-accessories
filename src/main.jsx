@@ -15,7 +15,9 @@ const theme = extendTheme({
     primary : '#AFEE1F',
     secondary : '#EED91F',
     textC: '#000',
-    brand: '#1E1E1E'
+    brand: '#1E1E1E',
+    primaryLight: '#9de200d4',
+    greyLight: '#D9D9D9'
   },
   shadows:{
     customShadow: "3px 4px 0px 1px rgba(0,0,0,1)",
@@ -27,6 +29,8 @@ const theme = extendTheme({
     body: {
       background: "linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('/cover.jpeg')",
       backgroundSize: "cover",
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed'
 
     },
     font:{

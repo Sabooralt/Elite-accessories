@@ -15,6 +15,7 @@ import Reviews from './pages/Reviews.jsx'
 //Layout 
 import RootLayout from './layouts/RootLayout.jsx'
 import NotFound from './pages/NotFound.jsx'
+import Login_Signup from './pages/Login-Signup.jsx'
 
 
 const router = createBrowserRouter(
@@ -24,8 +25,10 @@ const router = createBrowserRouter(
         <Route path='/aboutus' element={<About/>}/>
         <Route path='/reviews' element={<Reviews/>}/>
         <Route path='*' element={<NotFound/>}></Route>
+        <Route path='login' element={<Login_Signup/>}></Route>
       </Route>
     )
+  
 )
 function App() {
 

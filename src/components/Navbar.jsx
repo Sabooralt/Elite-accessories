@@ -59,6 +59,8 @@ export default function Header() {
               textAlign={"center"}
               _focus={"none"}
               placeholder="Elite Accessories"
+             
+              placeholderTextColor="red"
               border={0}
               borderRadius={30}
             />
@@ -70,9 +72,14 @@ export default function Header() {
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faInstagram} />
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faWhatsapp} />
 
+<NavLink to='/login' activeClassName="custom-active">
+  <div>
+
           <GlobalButton color={"textC"} bg={"secondary"}>
             Login/SignUp
           </GlobalButton>
+  </div>
+</NavLink>
         </HStack>
       </Flex>
 
