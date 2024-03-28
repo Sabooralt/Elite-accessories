@@ -3,15 +3,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { ChakraProvider, GlobalStyle, extendTheme } from "@chakra-ui/react";
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Router,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 import "@fontsource/poppins";
 import "@fontsource/poppins/100.css";
@@ -23,15 +15,7 @@ import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/700.css";
 import "@fontsource/poppins/800.css";
 import "@fontsource/poppins/900.css";
-import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
-import { AnimatePresence } from "framer-motion";
-import NotFound from "./pages/NotFound.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Signup.jsx";
-import Reviews from "./pages/Reviews.jsx";
-import Help from "./pages/Help.jsx";
-import AllProducts from "./pages/AllProducts.jsx";
+
 
 const theme = extendTheme({
   colors: {
@@ -68,34 +52,11 @@ const theme = extendTheme({
   },
 });
 
-const AnimatedRoutes = () => {
-  const location = useLocation();
- 
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<App />}>
-          <Route index element={<Home />} />
-          <Route path="/aboutus" element={<About />} />
-          <Route path="/products" element={<AllProducts />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reviews" element={<Reviews />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </AnimatePresence>
-  );
-};
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-        <BrowserRouter>
-          <AnimatedRoutes />
-        </BrowserRouter>
-      ;
+
+      <App/>
     </ChakraProvider>
   </React.StrictMode>
 );
