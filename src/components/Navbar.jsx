@@ -18,7 +18,7 @@ import {
   faWhatsapp,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Form, NavLink, useLocation } from "react-router-dom";
+import { Form, Link, NavLink, useLocation } from "react-router-dom";
 import { GlobalButton } from "./GlobalButton";
 
 export default function Header() {
@@ -72,14 +72,14 @@ export default function Header() {
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faInstagram} />
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faWhatsapp} />
 
-<NavLink to='/login' activeClassName="custom-active">
+<Link to='/login' activeClassName="custom-active">
   <div>
 
           <GlobalButton color={"textC"} bg={"secondary"}>
             Login/SignUp
           </GlobalButton>
   </div>
-</NavLink>
+</Link>
         </HStack>
       </Flex>
 
@@ -95,12 +95,16 @@ export const NavLinks = () => {
           link: "/",
         },
         {
-          name: "AboutUs",
+          name: "About Us",
           link: "/aboutus",
         },
         {
           name: "Reviews",
           link: "/reviews",
+        },
+        {
+          name: "Help",
+          link: "/help",
         },
       ];
 

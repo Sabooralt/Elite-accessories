@@ -5,7 +5,7 @@ import Header from '../components/Navbar'
 
 export default function RootLayout() {
   const location = useLocation();
-  const hideNavbarOnPaths = ['/login', '/signup']; // Customize these paths
+  const hideNavbarOnPaths = ['/login', '/register']; // Customize these paths
 
   const shouldRenderNavbar = !hideNavbarOnPaths.includes(location.pathname);
 

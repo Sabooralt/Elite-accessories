@@ -1,7 +1,8 @@
 import { Center, Heading } from '@chakra-ui/react'
 import React from 'react'
+import PrivacyScreen from '../Animations/privacyScreen'
 
-export default function About() {
+function About() {
   return (
     <>
 
@@ -11,4 +12,4 @@ export default function About() {
     </Center>
        </>
   )
-}
+} export default PrivacyScreen(About)

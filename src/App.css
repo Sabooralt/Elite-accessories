@@ -1,6 +1,17 @@
-body {
-  height: 100%;
- 
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+  background: #000;
+  -webkit-border-radius: 1ex;
+}
+
+::-webkit-scrollbar-thumb {
+  background: greenyellow;
+  -webkit-border-radius: 1ex;
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 a.active > button {
@@ -16,8 +27,10 @@ a.active > button {
 }
 ::placeholder {
 color: #00000030 !important;
-font-size: 1.5rem;
+font-size: 1.4rem;
 font-weight: 500;
+text-align: center;
+letter-spacing: .5px;
 }
 
 /* Carousel CSS */
@@ -45,5 +58,24 @@ font-weight: 500;
    height: 50px;
     width: 50px;
 
+}.slide-in{
+  position: fixed;
+  background-color: #0f0f0f;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  transform-origin: bottom;
+  z-index: 10;
+}
+.slide-out{
+  position: fixed;
+  background-color: #0f0f0f;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  transform-origin: top;
+  z-index: 10;
 }
 

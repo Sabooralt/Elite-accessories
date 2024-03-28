@@ -1,62 +1,80 @@
-import {
-  Grid,
-  SimpleGrid,
-  Box,
-  Heading,
-  Center,
-  Spacer,
-  VStack,
-  HStack,
-} from "@chakra-ui/react";
+import { Grid, Box, Heading, VStack } from "@chakra-ui/react";
 import React from "react";
 import { GlobalButton } from "../components/GlobalButton";
 import SignInForm from "../components/SignInForm";
-import { FaGoogle } from "react-icons/fa";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { Link } from "react-router-dom";
+import SignupSignInNavbar from "../components/SignupSignInNavbar";
+import PrivacyScreen from "../Animations/privacyScreen";
+import { GoogleLogin } from '@react-oauth/google';
 
-export default function Login_Signup() {
+
+function Login() {
+  
   return (
-    <Grid templateColumns="repeat(2, 1fr)" height={'100vh'} overflow={'hidden'}>
+    <Grid templateColumns=".6fr 1fr"overflow={"hidden"}>
       <Box
-      w={'fit-content'}
-       borderRight={'3.5px solid'}
-        pt={12}
-        px={"10rem"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        textAlign={"center"}
-        bg={"primaryLight"}
-        color={'textC'}
+     w={{ sm: "150%", lg: "100%", md: "fit-content", base: 300 }}
+     borderRight={"3.5px solid"}
+     pt={"7.5rem"}
+     px={{ lg: "7rem", md: "6rem", sm: "2rem", base: "1rem" }}
+     justifyContent={"center"}
+     alignItems={"center"}
+     textAlign={"center"}
+     bg={"primaryLight"}
+     color={"textC"}
+     position={"relative"}
       >
-        <Heading as={"h1"} fontSize={"5em"}>
+         <SignupSignInNavbar/>
+        <Heading
+           as={"h1"}
+           fontSize={{ lg: "5rem", md: "3rem", sm: "3rem", base: "3rem" }}
+        >
           Sign In
         </Heading>
 
         <VStack mt={10} spacing={1}>
-          <Heading fontSize={"1.5em"}>Don't have an Account?</Heading>
-
+          <Heading
+            fontSize={{
+              lg: "1.1rem",
+              md: "1.1rem",
+              sm: "1.1rem",
+              base: "0.8rem",
+            }}
+          >
+            Don't have an Account?
+          </Heading>
+<Link to="/register">
           <GlobalButton
             bg={"secondary"}
-            fontSize={"large"}
-            fontWeight={700}
-            borderRadius={'customA'}
-            px={8}
-            py={1}
+            fontSize={{
+              lg: "large",
+              md: "large",
+              sm: "large",
+              base: "medium",
+            }}
+            fontWeight={500}
+            borderRadius={"customA"}
+            px={10}
+            py={"0 !important"}
           >
             Register
           </GlobalButton>
+</Link>
+
         </VStack>
         <Box w={"100%"}>
           <SignInForm />
         </Box>
 
         <VStack mt={5} spacing={4}>
+       
           <GlobalButton
-          bg={'greyLight'}
-           borderRadius={'customA'}
+        
+            bg={"greyLight"}
+            borderRadius={"customA"}
             pl={1}
             py={2}
+            fontSize={"small"}
             leftIcon={
               <svg
                 width="30"
@@ -99,11 +117,11 @@ export default function Login_Signup() {
             Sign In With Google
           </GlobalButton>
           <GlobalButton
-          fontSize={'0.95rem'}
-          bg={'greyLight'}
-          borderRadius={'customA'}
+           fontSize={"0.76rem"}
+            bg={"greyLight"}
+            borderRadius={"customA"}
             pl={1}
-            pr={2}
+            pr={1}
             py={2}
             leftIcon={
               <svg
@@ -141,7 +159,9 @@ export default function Login_Signup() {
         </VStack>
       </Box>
 
-      <Box w={"100%"} bg={"transparent"}></Box>
+      <Box w={"100%"} bg={"transparent"} p={3}>
+       
+      </Box>
     </Grid>
   );
-}
+}export default PrivacyScreen(Login)

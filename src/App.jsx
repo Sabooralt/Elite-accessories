@@ -1,46 +1,42 @@
-
-import './App.css'
-import { ChakraProvider } from '@chakra-ui/react'
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
+import "./App.css";
+import {
+  Outlet,
+  Route,
+  RouterProvider,
+  Routes,
+  createBrowserRouter,
+  createRoutesFromElements,
+  useLocation,
+} from "react-router-dom";
 
 //Components
-import Footer from './components/Footer.jsx'
-import Header from './components/Navbar.jsx'
+import Header from "./components/Navbar.jsx";
+
 
 //Pages
-import Home from './pages/Home.jsx'
-import About from './pages/About.jsx'
-import Reviews from './pages/Reviews.jsx'
+import Home from "./pages/Home.jsx";
+import About from "./pages/About.jsx";
+import Reviews from "./pages/Reviews.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Signup.jsx";
+import Help from "./pages/Help.jsx";
 
-//Layout 
-import RootLayout from './layouts/RootLayout.jsx'
-import NotFound from './pages/NotFound.jsx'
-import Login_Signup from './pages/Login-Signup.jsx'
+//Layout
 
-
-const router = createBrowserRouter(
-    createRoutesFromElements(
-      <Route path='/' element={<RootLayout/>}>
-        <Route index element={<Home/>}/>
-        <Route path='/aboutus' element={<About/>}/>
-        <Route path='/reviews' element={<Reviews/>}/>
-        <Route path='*' element={<NotFound/>}></Route>
-        <Route path='login' element={<Login_Signup/>}></Route>
-      </Route>
-    )
-  
-)
 function App() {
+  const location = useLocation();
+  const hideNavbarOnPaths = ["/login", "/register"]; // Customize these paths
 
+  const shouldRenderNavbar = !hideNavbarOnPaths.includes(location.pathname);
   return (
-   <>
+    <>
+    {shouldRenderNavbar && <Header />}
+      
 
- <RouterProvider router={router}/>
-
-   </>
-
-
-  )
+      <Outlet />
+    </>
+  );
 }
 
-export default App
+export default App;
