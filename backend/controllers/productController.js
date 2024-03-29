@@ -27,10 +27,10 @@ const getProduct = async (req, res) => {
 // Create a product
 
 const createProduct = async (req, res) => {
-  const { title, price, phoneModels } = req.body;
+  const { title, price, description, category,colors, phoneModels } = req.body;
 
   try {
-    const product = await Product.create({ title, price, phoneModels });
+    const product = await Product.create({ title, price, description, category,colors, phoneModels });
     res.status(200).json(product);
   } catch (err) {
     res.status(400).json({ error: err.message });

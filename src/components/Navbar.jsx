@@ -48,7 +48,7 @@ export default function Header() {
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <InputLeftAddon bg={"transparent"} border={0} _hover={0} >
+            <InputLeftAddon bg={"transparent"} border={0} >
               <FontAwesomeIcon />
             </InputLeftAddon>
             <Input
@@ -57,10 +57,10 @@ export default function Header() {
               height={12}
               variant="outline"
               textAlign={"center"}
-              _focus={"none"}
+             
               placeholder="Elite Accessories"
              
-              placeholderTextColor="red"
+             
               border={0}
               borderRadius={30}
             />
@@ -72,7 +72,7 @@ export default function Header() {
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faInstagram} />
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faWhatsapp} />
 
-<Link to='/login' activeClassName="custom-active">
+<Link to='/login'>
   <div>
 
           <GlobalButton color={"textC"} bg={"secondary"}>
@@ -106,13 +106,17 @@ export const NavLinks = () => {
           name: "Help",
           link: "/help",
         },
+        {
+          name: "admin",
+          link: "/admin"
+        }
       ];
 
       const location = useLocation();
   return (
     <Flex justify={"flex-end"} gap={2} mt={5} px={5}>
       {navItems.map((item, index) => (
-        <NavLink to={item.link} key={index} activeClas>
+        <NavLink to={item.link} key={index}>
 
 
           <GlobalButton  color="textC" bg={"primary"} fontWeight={700} fontSize={'1.3rem'}>

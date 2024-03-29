@@ -11,6 +11,16 @@ const productSchema = new Schema({
         type: Number,
         required: true
     },
+    description:{
+        type: String,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true
+    },
+    colors : [{type: String, required: true}],
+    
     phoneModels: [{type: String, required: true}]
 
 },{timestamps: true})

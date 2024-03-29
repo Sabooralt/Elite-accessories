@@ -2,8 +2,19 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require('mongoose')
-const productRoutes = require('./routes/products')
+const productRoutes = require('./routes/products');
+const multer = require('multer')
 const cors = require('cors')
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, 'uploads/') // Destination folder for uploaded files
+    },
+    filename: function(req, file, cb) {
+      // Generate a unique filename for the uploaded file
+      cb(null, Date.now() + '-' + file.originalname)
+    }
+  });
 
 const app = express();
 
