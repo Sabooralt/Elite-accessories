@@ -1,3 +1,4 @@
+
 const Product = require("../models/productModel");
 const mongoose = require("mongoose");
 
@@ -27,13 +28,19 @@ const getProduct = async (req, res) => {
 // Create a product
 
 const createProduct = async (req, res) => {
-  const { title, price, description, category,colors, phoneModels } = req.body;
+  const { title, price, description, category, colors, phoneModels } = req.body;
 
   try {
-    const product = await Product.create({ title, price, description, category,colors, phoneModels });
-    res.status(200).json(product);
+      const images = req.files.map(file => ({
+          filename: file.filename,
+          filepath: file.path
+      }));
+      
+      // Save the product data and image details to the database
+      const product = await Product.create({ title, price, description, category, colors, phoneModels, images });
+      res.status(200).json(product);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+      res.status(500).json({ error: err.message });
   }
 };
 

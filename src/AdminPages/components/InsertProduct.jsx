@@ -10,16 +10,19 @@ import {
   Box,
   Stack,
   Image,
+  Select,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useProductsContext } from "../../hooks/useProductsContext";
 import Draggable from "react-draggable";
+import axios from "axios";
 
 export default function InsertProduct() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState();
-  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [description, setDescription] = useState("");
   const [colors, setColors] = useState([]);
   const [phoneModels, setPhoneModels] = useState([]);
@@ -30,60 +33,86 @@ export default function InsertProduct() {
   const [showToast, setShowToast] = useState(false);
   const toast = useToast();
 
-  
-
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setImages(files);
+  const handleChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setImages(selectedFiles);
   };
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://localhost:4000/api/category");
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
   /* const handleColorChange = (event) => {
     setColors([...colors, event.target.value]); // Add new color to the array
   }; */
 
   const handleSubmitButton = () => {
-    if (title === '' || price === null || category === '' || description === '') {
+    if (
+      title === "" ||
+      price === null ||
+      selectedCategory === "" ||
+      description === ""
+    ) {
       return false; // Disable button if any required field is empty or null
     }
-  
-    if (!colors || colors.length === 0 || !phoneModels || phoneModels.length === 0) {
+
+    if (
+      !colors ||
+      colors.length === 0 ||
+      !phoneModels ||
+      phoneModels.length === 0
+    ) {
       return false;
     }
-  
+
     return true;
-  }
+  };
 
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
 
-    const product = {
-      title,
-      price,
-      description,
-      category,
-      colors,
-      phoneModels,
-    };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("category", selectedCategory);
+    formData.append("colors", JSON.stringify(colors));
+    formData.append("phoneModels", JSON.stringify(phoneModels));
 
+    for (let i = 0; i < images.length; i++) {
+      formData.append("images", images[i]);
+    }
     try {
-      const response = await fetch("http://localhost:4000/api/products", {
-        method: "POST",
-        body: JSON.stringify(product),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const json = await response.json();
+      const response = await axios.post(
+        "http://localhost:4000/api/products",
+        formData,
+        {
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+          },
+        }
+      );
 
-      if (response.ok) {
+      if (response.status === 200) {
         setTitle("");
         setPrice(0);
-        setCategory('')
+        setCategories("");
         setDescription("");
         setColors([]);
         setPhoneModels([]);
-        dispatch({ type: "CREATE_PRODUCT", payload: json });
+        dispatch({ type: "CREATE_PRODUCT", payload: response.data });
 
         toast({
           title: `${title} Created!`,
@@ -92,9 +121,8 @@ export default function InsertProduct() {
           duration: 5000,
           isClosable: true,
         });
-      }
-      if (!response.ok) {
-        setError(json.error);
+      } else {
+        setError(response.data.error);
         toast({
           title: "Oops!",
           description:
@@ -110,7 +138,6 @@ export default function InsertProduct() {
       setLoading(false);
     }
   };
-
   return (
     <div
       className="d-flex justify-content-center align-items-center"
@@ -120,6 +147,7 @@ export default function InsertProduct() {
         <h1 className="text-white">Insert Product</h1>
 
         <form
+          encType="multipart/form-data"
           className="d-flex flex-column"
           onSubmit={handleSubmit}
           style={{ width: "70%" }}
@@ -146,14 +174,17 @@ export default function InsertProduct() {
             />
           </FormControl>
           <FormControl mt="5">
-            <Input
-              bg={"white"}
-              color="textC"
-              placeholder="Category"
-              type="text"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            />
+          <Select id="category"
+          bg='white'
+          color='textC'
+        value={selectedCategory} onChange={(e)=> setSelectedCategory(e.target.value)} variant='flushed' placeholder='Select Category'>
+        {categories && categories.map((category) => (
+          <option key={category._id} value={category._id}>
+            {category.name}
+          </option>
+        ))}
+        </Select>
+           
           </FormControl>
           <FormControl mt="5">
             <Input
@@ -187,26 +218,33 @@ export default function InsertProduct() {
             />
           </FormControl>
           <FormControl mt="5">
-            <Text color={'white'}>
-              Images:
-            </Text>
+            <Text color={"white"}>Images:</Text>
             <Input
-              bg={"white"}
-              color={"black"}
+              name="images"
+              id="images"
               type="file"
-              onChange={handleImageChange}
+              onChange={handleChange}
               multiple
               accept="image/*"
             />
           </FormControl>
-      
 
-          <Stack direction={'row'} mt='5' style={{gap: 20, overflow: 'scroll'}}>
-        {images && images.map((image, index) => (
-          <Image key={index} boxSize='250px' objectFit='cover' src={URL.createObjectURL(image)} alt={`Image ${index}`} />
-        ))}
-      </Stack>
-
+          <Stack
+            direction={"row"}
+            mt="5"
+            style={{ gap: 20, overflow: "scroll" }}
+          >
+            {images &&
+              images.map((image, index) => (
+                <Image
+                  key={index}
+                  boxSize="250px"
+                  objectFit="cover"
+                  src={URL.createObjectURL(image)}
+                  alt={`Image ${index}`}
+                />
+              ))}
+          </Stack>
 
           {/*  {colors &&
             colors.map((color, index) => (
@@ -219,7 +257,7 @@ export default function InsertProduct() {
             Clear Colors
           </button>
           <Button
-         isDisabled={!handleSubmitButton()}
+            isDisabled={!handleSubmitButton()}
             type="submit"
             mt={5}
             isLoading={loading}

@@ -3,6 +3,7 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import InsertProduct from './components/InsertProduct'
 import AdminProducts from './components/AdminProducts'
+import AddCategory from './components/AddCategory'
 
 export default function ManageProducts() {
   return (
@@ -18,7 +19,7 @@ export default function ManageProducts() {
   <TabList>
     <Tab>Insert Product</Tab>
     <Tab>Products</Tab>
-    <Tab>Three</Tab>
+    <Tab>Add Category</Tab>
   </TabList>
 
   <TabPanels>
@@ -29,7 +30,7 @@ export default function ManageProducts() {
      <AdminProducts/>
     </TabPanel>
     <TabPanel>
-      <p>three!</p>
+    <AddCategory/>
     </TabPanel>
   </TabPanels>
 </Tabs>

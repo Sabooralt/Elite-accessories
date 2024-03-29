@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require('multer')
 
 const Product = require("../models/productModel");
 const {
@@ -9,6 +10,7 @@ const {
   deleteProduct,
 } = require("../controllers/productController");
 
+
 const router = express.Router();
 
 router.get("/", getProducts);
@@ -17,7 +19,17 @@ router.get("/", getProducts);
 router.get("/:id", getProduct);
 
 //post
-router.post("/", createProduct);
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Specify the directory where uploaded files will be stored
+  },
+  filename: function (req, file, cb) {
+      cb(null, file.originalname); // Use the original filename
+  }
+});
+
+const upload = multer({ storage: storage });
+router.post("/", upload.array("images"), createProduct);
 //DELETE
 router.delete("/:id", deleteProduct);
 //Update a product
