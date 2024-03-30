@@ -1,5 +1,6 @@
 const express = require("express");
-const multer = require('multer')
+const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
 
 const Product = require("../models/productModel");
 const {
@@ -21,10 +22,11 @@ router.get("/:id", getProduct);
 //post
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, 'uploads/'); // Specify the directory where uploaded files will be stored
+      cb(null, '../public/ProductImages/'); // Specify the directory where uploaded files will be stored
   },
   filename: function (req, file, cb) {
-      cb(null, file.originalname); // Use the original filename
+    const uniqueFileName = `${uuidv4()}-${Date.now()}.jpg`;
+      cb(null, uniqueFileName); // Use the original filename
   }
 });
 

@@ -16,6 +16,7 @@ import "@fontsource/poppins/700.css";
 import "@fontsource/poppins/800.css";
 import "@fontsource/poppins/900.css";
 import { ProductContextProvider } from "./context/ProductContext.jsx";
+import { CategoryContextProvider } from "./context/CategoryContext.jsx";
 
 const theme = extendTheme({
   colors: {
@@ -56,8 +57,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <ProductContextProvider>
-
-      <App />
+        <CategoryContextProvider>
+          <App />
+        </CategoryContextProvider>
       </ProductContextProvider>
     </ChakraProvider>
   </React.StrictMode>

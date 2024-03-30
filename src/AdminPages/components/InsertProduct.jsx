@@ -11,11 +11,20 @@ import {
   Stack,
   Image,
   Select,
+  IconButton,
+  UnorderedList,
+  ListItem,
+  FormHelperText,
+  TagCloseButton,
+  Tag,
+  HStack,
+  TagLabel,
 } from "@chakra-ui/react";
+import { FiTrash } from "react-icons/fi";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useProductsContext } from "../../hooks/useProductsContext";
-import Draggable from "react-draggable";
+import { useCategoryContext } from "../../hooks/useCategoryContext";
 import axios from "axios";
 
 export default function InsertProduct() {
@@ -25,15 +34,55 @@ export default function InsertProduct() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [description, setDescription] = useState("");
   const [colors, setColors] = useState([]);
+  const [newColor, setNewColor] = useState("");
   const [phoneModels, setPhoneModels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
   const [images, setImages] = useState([]);
-  const { state, dispatch } = useProductsContext();
+  const { state: productsState, dispatch: productsDispatch } = useProductsContext();
+  const { state: categoryState, dispatch: categoryDispatch } = useCategoryContext();
   const [showToast, setShowToast] = useState(false);
   const toast = useToast();
+  const [newPhoneModel, setNewPhoneModel] = useState("");
+
+  //Multiple colors functionality
+
+  const handleAddColor = () => {
+    if (newColor.trim() !== "") {
+      setColors([...colors, newColor]);
+      setNewColor("");
+    }
+  };
+
+  const handleColorInputChange = (e) => {
+    setNewColor(e.target.value);
+  };
+
+  const handleRemoveColor = (index) => {
+    const updatedColors = colors.filter((_, i) => i !== index);
+    setColors(updatedColors);
+  };
+
+  // Phone Models functionality
+
+  const handleAddPhoneModel = () => {
+    if (newPhoneModel.trim() !== "") {
+      setPhoneModels([...phoneModels, newPhoneModel]);
+      setNewPhoneModel(""); // Reset input field
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setNewPhoneModel(e.target.value);
+  };
+
+  const handleRemovePhoneModel = (index) => {
+    const updatedPhoneModels = phoneModels.filter((_, i) => i !== index);
+    setPhoneModels(updatedPhoneModels);
+  };
 
   const handleChange = (e) => {
+    // covert images to array
     const selectedFiles = Array.from(e.target.files);
     setImages(selectedFiles);
   };
@@ -43,9 +92,10 @@ export default function InsertProduct() {
       try {
         setLoading(true);
         const response = await axios.get("http://localhost:4000/api/category");
+        categoryDispatch({type: 'SET_CATEGORY',payload: response.data})
         setCategories(response.data);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.log("Error fetching categories:", error);
       } finally {
         setLoading(false);
       }
@@ -53,15 +103,13 @@ export default function InsertProduct() {
 
     fetchCategories();
   }, []);
-  /* const handleColorChange = (event) => {
-    setColors([...colors, event.target.value]); // Add new color to the array
-  }; */
 
   const handleSubmitButton = () => {
+    // submit button state
     if (
       title === "" ||
       price === null ||
-      selectedCategory === "" ||
+      selectedCategory === null ||
       description === ""
     ) {
       return false; // Disable button if any required field is empty or null
@@ -70,6 +118,8 @@ export default function InsertProduct() {
     if (
       !colors ||
       colors.length === 0 ||
+      !images ||
+      images.length === 0 ||
       !phoneModels ||
       phoneModels.length === 0
     ) {
@@ -108,11 +158,10 @@ export default function InsertProduct() {
       if (response.status === 200) {
         setTitle("");
         setPrice(0);
-        setCategories("");
         setDescription("");
         setColors([]);
         setPhoneModels([]);
-        dispatch({ type: "CREATE_PRODUCT", payload: response.data });
+        productsDispatch({ type: "CREATE_PRODUCT", payload: response.data });
 
         toast({
           title: `${title} Created!`,
@@ -138,6 +187,7 @@ export default function InsertProduct() {
       setLoading(false);
     }
   };
+
   return (
     <div
       className="d-flex justify-content-center align-items-center"
@@ -174,27 +224,28 @@ export default function InsertProduct() {
             />
           </FormControl>
           <FormControl mt="5">
-          <Select id="category"
-          bg='white'
-          color='textC'
-        value={selectedCategory} onChange={(e)=> setSelectedCategory(e.target.value)} variant='flushed' placeholder='Select Category'>
-        {categories && categories.map((category) => (
-          <option key={category._id} value={category._id}>
-            {category.name}
-          </option>
-        ))}
-        </Select>
-           
-          </FormControl>
-          <FormControl mt="5">
-            <Input
-              bg={"white"}
+            <Select
+              id="category"
+              bg="white"
               color="textC"
-              placeholder="Colors"
-              type="text"
-              value={colors}
-              onChange={(e) => setColors(e.target.value)}
-            />
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              variant="flushed"
+              placeholder="Select Category"
+            >
+              {categories &&
+                categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
+                  </option>
+                ))}
+            </Select>
+            <FormHelperText>
+              Note: I didn't add any validation on this input. So, even if the
+              value of Category is 'Select Category', the form will submit with
+              that text. Therefore, make sure to double-check this field before
+              submitting!
+            </FormHelperText>
           </FormControl>
           <FormControl mt="5">
             <Textarea
@@ -208,14 +259,84 @@ export default function InsertProduct() {
             />
           </FormControl>
           <FormControl mt="5">
-            <Input
-              bg={"white"}
-              color={"black"}
-              placeholder="Phone Models"
-              type="text"
-              onChange={(e) => setPhoneModels(e.target.value)}
-              value={phoneModels}
-            />
+            <VStack className="text-white" border="1px solid #fff" p="5">
+              <Text m={0}>Add Color:</Text>
+              <FormHelperText>Click on the input to choose a color to add.(You can choose multiple)</FormHelperText>
+              <Input
+                placeholder="Add Phone Model"
+                bg={"white"}
+                color={"black"}
+                type="color"
+                id="newPhoneModel"
+                value={newColor}
+                onChange={handleColorInputChange}
+              />
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleAddColor}
+              >
+                Add Color
+              </button>
+
+              <Text mb={0} mt={2}>
+               Colors picked:
+              </Text>
+              <HStack w="100%">
+                {colors.map((color, index) => (
+                  <Tag
+                    key={index}
+                    className="d-flex justify-content-between p-2"
+                    bg={color}
+                    color={'grey.500'}
+                  >
+                    <TagLabel>{color}</TagLabel>
+                    
+                    <TagCloseButton onClick={() => handleRemoveColor(index)}/>
+                  </Tag>
+                ))}
+              </HStack>
+            </VStack>
+          </FormControl>
+          <FormControl mt="5">
+            <VStack className="text-white" border="1px solid #fff" p="5">
+              <Text>Add Phone Model:</Text>
+              <Input
+                placeholder="Add Phone Model"
+                bg={"white"}
+                color={"black"}
+                type="text"
+                id="newPhoneModel"
+                value={newPhoneModel}
+                onChange={handleInputChange}
+              />
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleAddPhoneModel}
+              >
+                Add Phone Model
+              </button>
+
+              <Text mb={0} mt={2}>
+                Phone Models picked:
+              </Text>
+              <UnorderedList w="100%">
+                {phoneModels.map((model, index) => (
+                  <ListItem
+                    key={index}
+                    className="d-flex justify-content-between p-2"
+                  >
+                    {model}{" "}
+                    <IconButton
+                      colorScheme="teal"
+                      icon={<FiTrash />}
+                      onClick={() => handleRemovePhoneModel(index)}
+                    />
+                  </ListItem>
+                ))}
+              </UnorderedList>
+            </VStack>
           </FormControl>
           <FormControl mt="5">
             <Text color={"white"}>Images:</Text>
@@ -253,20 +374,27 @@ export default function InsertProduct() {
               </div>
             ))} */}
 
-          <button className="btn btn-dark mt-5" onClick={() => setColors([])}>
-            Clear Colors
-          </button>
-          <Button
-            isDisabled={!handleSubmitButton()}
-            type="submit"
-            mt={5}
-            isLoading={loading}
-            loadingText="Submitting"
-            colorScheme="purple"
-            rightIcon={<ArrowForwardIcon />}
-          >
-            Submit
-          </Button>
+          <FormControl className="w-100">
+            <FormHelperText>
+              If the submit button is disabled, that means you have left some
+              fields empty. Fill all the fields, and then you'll be able to
+              submit easily.
+            </FormHelperText>
+
+            <Button
+            className="w-100"
+              isDisabled={!handleSubmitButton()}
+              type="submit"
+              mt={5}
+              isLoading={loading}
+              loadingText="Submitting"
+              colorScheme="purple"
+              rightIcon={<ArrowForwardIcon />}
+            >
+              Submit
+            </Button>
+          </FormControl>
+
           {error && (
             <Box
               my={5}

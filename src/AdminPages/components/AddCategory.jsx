@@ -1,11 +1,15 @@
-import { Button, Input, Text, VStack, useToast } from "@chakra-ui/react";
+import { Box, Button, Heading, Input, OrderedList, Text, VStack, useToast } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useCategoryContext } from "../../hooks/useCategoryContext";
+import CategoryList from "./CategoryList";
 
 export default function AddCategory() {
   const [category, setCategory] = useState();
   const [loading, setLoading] = useState(false);
+  const {categories,dispatch} = useCategoryContext();
   const toast = useToast();
+
 
   const Upload = async (e) => {
     e.preventDefault();
@@ -25,6 +29,8 @@ export default function AddCategory() {
         });
         setLoading(false);
         setCategory("");
+        dispatch({type: 'CREATE_CATEGORY',payload: response.data})
+
       } else {
         setLoading(false);
         toast({
@@ -61,6 +67,17 @@ export default function AddCategory() {
           Submit
         </Button>
       </VStack>
+<Box className="mt-5" width='100%' p={7} border='2px solid #000'>
+<Heading>
+  Categories:
+</Heading>
+      <OrderedList spacing={5} m={0} mt={5} padding={0}>
+        {categories && categories.map((category)=>(
+          <CategoryList key={category._id} category={category}/>
+          ))}
+
+      </OrderedList>
+          </Box>
     </div>
   );
 }
