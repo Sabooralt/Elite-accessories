@@ -8,12 +8,12 @@ import PrivacyScreen from "../Animations/privacyScreen";
 
 function Register() {
   return (
-    <Grid templateColumns=".6fr 1fr" tem height={"100vh"} overflow={"hidden"}>
+    <Grid templateColumns=".6fr 1fr" height='100%' overflow={"hidden"}>
       <Box
-        w={{ sm: "150%", lg: "100%", md: "fit-content", base: 300 }}
+        w={{ sm: "150%", lg: "100%", md: "100%", base: 300 }}
         borderRight={"3.5px solid"}
-        pt={"7.5rem"}
-        px={{ lg: "7rem", md: "6rem", sm: "2rem", base: "1rem" }}
+        py={"7.5rem"}
+        px={{ lg: "7rem", md: null, sm: "2rem", base: "1rem" }}
         justifyContent={"center"}
         alignItems={"center"}
         textAlign={"center"}

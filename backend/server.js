@@ -4,7 +4,8 @@ const express = require("express");
 const mongoose = require('mongoose')
 const categoryRoutes = require('./routes/categoryRoutes')
 const productRoutes = require('./routes/products');
-const userRoutes = require('./routes/userRoutes')
+const userRoutes = require('./routes/userRoutes');
+const cartRoutes = require('./routes/cartRoutes')
 const cors = require('cors')
 
 
@@ -25,7 +26,8 @@ app.use((req,res,next)=>{
 //Routes
 app.use('/api/category',categoryRoutes)
 app.use('/api/products',productRoutes)
-app.use('/api/user',userRoutes)
+app.use('/api/user',userRoutes);
+app.use('/api/cart',cartRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{

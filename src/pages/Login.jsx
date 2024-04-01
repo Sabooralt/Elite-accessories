@@ -15,7 +15,7 @@ function Login() {
       <Box
      w={{ sm: "150%", lg: "100%", md: "fit-content", base: 300 }}
      borderRight={"3.5px solid"}
-     pt={"7.5rem"}
+     py={"7.5rem"}
      px={{ lg: "7rem", md: "6rem", sm: "2rem", base: "1rem" }}
      justifyContent={"center"}
      alignItems={"center"}

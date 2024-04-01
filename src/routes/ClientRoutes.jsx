@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 //Pages
 import Home from "../pages/Home.jsx";
@@ -24,9 +24,12 @@ import CategoryManagement from "../AdminPages/CategoryManagement.jsx";
 import Favourites from "../AdminPages/components/Favourites.jsx";
 import Settings from "../AdminPages/Settings.jsx";
 import UpdateProduct from "../AdminPages/components/UpdateProduct.jsx";
+import { useAuthContextProvider } from "../hooks/useAuthContext.jsx";
+
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  const {user } = useAuthContextProvider();
 
   return (
     <AnimatePresence mode="wait">
@@ -35,8 +38,8 @@ const AnimatedRoutes = () => {
           <Route index element={<Home />} />
           <Route path="/aboutus" element={<About />} />
           <Route path="/products" element={<AllProducts />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={!user? <Login /> : <Navigate to="/"/>} />
+          <Route path="/register" element={!user? <Register /> : <Navigate to='/'/>} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/help" element={<Help />} />
           <Route path="*" element={<NotFound />} />
