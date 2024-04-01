@@ -1,4 +1,4 @@
-import { Flex, IconButton, ListItem, Text, useToast } from "@chakra-ui/react";
+import { Flex, Icon, IconButton, ListItem, Text, useToast,Tooltip, useDisclosure,Popover, PopoverContent, PopoverHeader, PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup, Button, PopoverTrigger, Divider } from "@chakra-ui/react";
 import React from "react";
 import { FiTrash } from "react-icons/fi";
 import { useCategoryContext } from "../../hooks/useCategoryContext";
@@ -7,6 +7,7 @@ import axios from "axios";
 export default function CategoryList({ category }) {
   const { dispatch } = useCategoryContext();
   const toast = useToast();
+  const {isOpen, onClose, onToggle} = useDisclosure();
 
   const handleDelete = async () => {
     const response = await axios.delete(
@@ -41,12 +42,43 @@ export default function CategoryList({ category }) {
       <Text>{category.name}</Text>
 
       <Flex style={{ gap: 10 }}>
+        <Popover
+        returnFocusOnClose={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        placement='right'
+        closeOnBlur={true}
+      >
+        <PopoverContent>
+          <PopoverHeader fontWeight='semibold'>Confirmation</PopoverHeader>
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverBody>
+          Note: Deleting the category will also delete all products associated with it. <Divider/>
+            Are you sure you want to continue with your action?
+          </PopoverBody>
+          <PopoverFooter display='flex' justifyContent='flex-end'>
+            <ButtonGroup size='sm'>
+              <Button variant='outline' onClick={onClose}>Cancel</Button>
+              <Button colorScheme='red' onClick={handleDelete}>Delete</Button>
+            </ButtonGroup>
+          </PopoverFooter>
+        </PopoverContent>
+        <PopoverTrigger>
+        
+
         <IconButton
-          onClick={handleDelete}
+          onClick={onToggle}
           colorScheme="red"
           aria-label="Delete"
           icon={<FiTrash />}
-        />
+          />
+          </PopoverTrigger>
+      </Popover>
+
+      
+
+
       </Flex>
     </ListItem>
   );

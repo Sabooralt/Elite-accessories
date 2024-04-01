@@ -10,7 +10,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import InsertProduct from "./components/InsertProduct";
 import AdminProducts from "./components/AdminProducts";
-import AddCategory from "./components/AddCategory";
+import AddCategory from "./components/ManageCategories";
 
 export default function ManageProducts() {
   return (
@@ -25,7 +25,7 @@ export default function ManageProducts() {
           <TabList>
             <Tab>Insert Product</Tab>
             <Tab>Products</Tab>
-            <Tab>Add Category</Tab>
+            <Tab>Manage Categories</Tab>
           </TabList>
 
           <TabPanels>

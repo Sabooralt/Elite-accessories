@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Badge,
   Box,
@@ -5,17 +6,24 @@ import {
   Flex,
   IconButton,
   Image,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
 import { FaPencil } from "react-icons/fa6";
 import { FiTrash } from "react-icons/fi";
 import { useProductsContext } from "../../hooks/useProductsContext";
 import axios from "axios";
+import UpdateProduct from "./UpdateProduct";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
   const { dispatch } = useProductsContext();
+
+
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+
 
   const handleDelete = async () => {
     const response = await axios.delete(
@@ -116,11 +124,13 @@ export default function ProductCard({ product }) {
               aria-label="Delete"
               icon={<FiTrash />}
             />
+              <Link to={`/admin/updateProduct/${product._id}`} >
             <IconButton
               colorScheme="blue"
               aria-label="Update"
-              icon={<FaPencil />}
+              icon={<FaPencil onClick={onOpen}/>}
             />
+            </Link>
           </Flex>
         </Box>
 

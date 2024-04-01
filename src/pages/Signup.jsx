@@ -6,7 +6,6 @@ import RegisterForm from "../components/RegisterForm";
 import SignupSignInNavbar from "../components/SignupSignInNavbar";
 import PrivacyScreen from "../Animations/privacyScreen";
 
-
 function Register() {
   return (
     <Grid templateColumns=".6fr 1fr" tem height={"100vh"} overflow={"hidden"}>
@@ -22,7 +21,7 @@ function Register() {
         color={"textC"}
         position={"relative"}
       >
-       <SignupSignInNavbar/>
+        <SignupSignInNavbar />
         <Box>
           <Heading
             as={"h1"}
@@ -31,7 +30,6 @@ function Register() {
             Sign Up
           </Heading>
         </Box>
-
 
         <VStack mt={2} spacing={1}>
           <Heading
@@ -157,9 +155,7 @@ function Register() {
         </VStack>
       </Box>
 
-      <Box w={"100%"} bg={"transparent"} p={3}>
-        
-      </Box>
+      <Box w={"100%"} bg={"transparent"} p={3}></Box>
     </Grid>
   );
 }

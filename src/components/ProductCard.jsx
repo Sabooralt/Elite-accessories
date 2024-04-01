@@ -8,6 +8,7 @@ import {
   Image,
   Text,
   VStack,
+
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
@@ -26,7 +27,7 @@ export default function ProductCard({ children, prize }) {
     <Card width="100%" height="100%" position={"relative"} bg={"transparent"}>
       <CardBody p={0} width={"100%"} height={"100%"}>
         <Image
-          src="/products/me.jpeg"
+          src="/products/demoproduct.jpeg"
           objectFit={"contain"}
           width={"100%"}
           maxH={"320px"}

@@ -18,6 +18,7 @@ export default function AddCategory() {
       const response = await axios.post("http://localhost:4000/api/category", {
         name: category,
       });
+      const json = response.data
 
       if (response.status === 201) {
         toast({
@@ -29,7 +30,8 @@ export default function AddCategory() {
         });
         setLoading(false);
         setCategory("");
-        dispatch({type: 'CREATE_CATEGORY',payload: response.data})
+        dispatch({type: 'CREATE_CATEGORY',payload:json});
+        console.log('category added')
 
       } else {
         setLoading(false);

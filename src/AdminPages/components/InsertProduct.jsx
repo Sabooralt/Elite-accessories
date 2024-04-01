@@ -30,7 +30,6 @@ import axios from "axios";
 export default function InsertProduct() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState();
-  const [categories, setCategories] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [description, setDescription] = useState("");
   const [colors, setColors] = useState([]);
@@ -40,7 +39,7 @@ export default function InsertProduct() {
   const [error, setError] = useState();
   const [images, setImages] = useState([]);
   const { state: productsState, dispatch: productsDispatch } = useProductsContext();
-  const { state: categoryState, dispatch: categoryDispatch } = useCategoryContext();
+  const { categories, dispatch: categoryDispatch } = useCategoryContext();
   const [showToast, setShowToast] = useState(false);
   const toast = useToast();
   const [newPhoneModel, setNewPhoneModel] = useState("");
@@ -87,22 +86,6 @@ export default function InsertProduct() {
     setImages(selectedFiles);
   };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("http://localhost:4000/api/category");
-        categoryDispatch({type: 'SET_CATEGORY',payload: response.data})
-        setCategories(response.data);
-      } catch (error) {
-        console.log("Error fetching categories:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   const handleSubmitButton = () => {
     // submit button state

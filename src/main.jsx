@@ -17,8 +17,12 @@ import "@fontsource/poppins/800.css";
 import "@fontsource/poppins/900.css";
 import { ProductContextProvider } from "./context/ProductContext.jsx";
 import { CategoryContextProvider } from "./context/CategoryContext.jsx";
+import { AuthContextProvider } from "./context/AuthContext.jsx";
 
 const theme = extendTheme({
+  config: {
+    useSystemColorMode: true,
+  },
   colors: {
     primary: "#AFEE1F",
     secondary: "#EED91F",
@@ -55,12 +59,14 @@ const theme = extendTheme({
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+        <AuthContextProvider>
     <ChakraProvider theme={theme}>
       <ProductContextProvider>
-        <CategoryContextProvider>
-          <App />
-        </CategoryContextProvider>
+          <CategoryContextProvider>
+            <App />
+          </CategoryContextProvider>
       </ProductContextProvider>
     </ChakraProvider>
+        </AuthContextProvider>
   </React.StrictMode>
 );

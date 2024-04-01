@@ -23,6 +23,7 @@ import ManageUsers from "../AdminPages/ManageUsers.jsx";
 import CategoryManagement from "../AdminPages/CategoryManagement.jsx";
 import Favourites from "../AdminPages/components/Favourites.jsx";
 import Settings from "../AdminPages/Settings.jsx";
+import UpdateProduct from "../AdminPages/components/UpdateProduct.jsx";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -47,6 +48,7 @@ const AnimatedRoutes = () => {
             <Route path="productmanagement" element={<ManageProducts />} >
               <Route path="insertProduct" element={<InsertProduct/>}/>
             </Route>
+            <Route path="updateProduct/:productId" element={<UpdateProduct/>}/>
             <Route path="usermanagement" element={<ManageUsers />} />
             <Route path="categorymanagement" element={<CategoryManagement />} />
             <Route path="favourites" element={<Favourites />} />

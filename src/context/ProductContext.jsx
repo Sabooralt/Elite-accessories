@@ -9,6 +9,7 @@ export const productsReducer = (state, action) => {
         products: action.payload,
       };
     case "CREATE_PRODUCT":
+      console.log("UPDATE_PRODUCT action received with payload:", action.payload);
       return {
         products: [action.payload, ...state.products],
       };
@@ -16,6 +17,13 @@ export const productsReducer = (state, action) => {
       return {
         products: state.products.filter((w) => w._id !== action.payload._id),
       };
+      case "UPDATE_PRODUCT":
+        console.log("UPDATE_PRODUCT action received with payload:", action.payload);
+        return {
+          products: state.products.map(product =>
+            product._id === action.payload._id ? action.payload : product
+          )
+        };
     default:
       return state;
   }
