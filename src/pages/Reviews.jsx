@@ -1,14 +1,12 @@
-import { Center, Heading } from '@chakra-ui/react'
-import React from 'react'
+import { ReviewsCard } from "../components/ReviewsCard";
+
+
 
 export default function Reviews() {
-  return (
+  return(
     <>
-
-    <Center>
-   
-       <Heading as={'h1'} >Reviews</Heading>
-    </Center>
-       </>
+    <ReviewsCard/>
+    </>
   )
 }
+

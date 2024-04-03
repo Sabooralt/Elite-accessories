@@ -6,6 +6,13 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "15d" });
 };
 
+
+const getUsers = async (req,res)=>{
+
+  const user = await User.find({}).sort({ createdAt: -1 });
+  
+  res.status(201).json(user);
+}
 //login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -15,7 +22,7 @@ const loginUser = async (req, res) => {
 
     const token = createToken(user._id);
 
-    res.status(200).json({email: user.email,fullName: user.fullName, token });
+    res.status(200).json({_id: user._id, email: user.email,fullName: user.fullName, token });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -35,4 +42,4 @@ const signupUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, signupUser };
+module.exports = { loginUser, signupUser,getUsers };

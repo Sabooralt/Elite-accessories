@@ -18,6 +18,7 @@ import "@fontsource/poppins/900.css";
 import { ProductContextProvider } from "./context/ProductContext.jsx";
 import { CategoryContextProvider } from "./context/CategoryContext.jsx";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
+import { CartContextProvider } from "./context/CartContext.jsx";
 
 const theme = extendTheme({
   config: {
@@ -26,6 +27,7 @@ const theme = extendTheme({
   colors: {
     primary: "#AFEE1F",
     secondary: "#EED91F",
+    primaryGradient: '#F5FFDE',
     textC: "#000",
     brand: "#1E1E1E",
     primaryLight: "#9de200d4",
@@ -34,6 +36,7 @@ const theme = extendTheme({
   shadows: {
     customShadow: "3px 4px 0px 1px rgba(0,0,0,1)",
     cardShadow: "6px 9px 0px 1px #323030",
+    circleShadow: "0px 0px 6px 0px rgba(0,0,0,0.75)"
   },
 
   radii: {
@@ -63,8 +66,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <ChakraProvider theme={theme}>
       <ProductContextProvider>
           <CategoryContextProvider>
+            <CartContextProvider>
+
             <App />
-          </CategoryContextProvider>
+          </CartContextProvider>
+            </CategoryContextProvider>
       </ProductContextProvider>
     </ChakraProvider>
         </AuthContextProvider>

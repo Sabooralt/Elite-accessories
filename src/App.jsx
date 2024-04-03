@@ -35,13 +35,17 @@ import { useEffect, useState } from "react";
 import { useCategoryContext } from "./hooks/useCategoryContext.jsx";
 import { useProductsContext } from "./hooks/useProductsContext.jsx";
 import axios from "axios";
+import { useCartContext } from "./hooks/useCartContext.jsx";
+import { useAuthContextProvider } from "./hooks/useAuthContext.jsx";
 
 function App() {
   // states-variable
 
   const [loading, setLoading] = useState(false);
   const { dispatch: categoryDispatch } = useCategoryContext();
-  const {dispatch: productsDispatch} = useProductsContext();
+  const { dispatch: productsDispatch } = useProductsContext();
+  const { dispatch: cartDispatch } = useCartContext();
+  const { user } = useAuthContextProvider();
 
   //API Hits
 
@@ -74,9 +78,9 @@ function App() {
     };
 
     fetchAllProducts();
-  }, [productsDispatch]);
+  }, []);
 
-
+ 
 
   return (
     <>

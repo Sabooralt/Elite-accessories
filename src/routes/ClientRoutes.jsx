@@ -25,6 +25,7 @@ import Favourites from "../AdminPages/components/Favourites.jsx";
 import Settings from "../AdminPages/Settings.jsx";
 import UpdateProduct from "../AdminPages/components/UpdateProduct.jsx";
 import { useAuthContextProvider } from "../hooks/useAuthContext.jsx";
+import MyCart from "../pages/MyCart.jsx";
 
 
 const AnimatedRoutes = () => {
@@ -41,6 +42,7 @@ const AnimatedRoutes = () => {
           <Route path="/login" element={!user? <Login /> : <Navigate to="/"/>} />
           <Route path="/register" element={!user? <Register /> : <Navigate to='/'/>} />
           <Route path="/reviews" element={<Reviews />} />
+          <Route path="/MyCart" element={<MyCart />} />
           <Route path="/help" element={<Help />} />
           <Route path="*" element={<NotFound />} />
         </Route>

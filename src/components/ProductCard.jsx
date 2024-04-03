@@ -8,33 +8,37 @@ import {
   Image,
   Text,
   VStack,
-
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import { GlobalButton } from "./GlobalButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCartShopping,
-  faShoppingCart,
-} from "@fortawesome/free-solid-svg-icons";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { FaHeart } from "react-icons/fa";
+import { useAddToCart } from "../hooks/useAddToCart";
 
-export default function ProductCard({ children, prize }) {
+export default function ProductCard({ product }) {
   const toast = useToast();
+  const {addtocart} = useAddToCart();
+
+  const handleAddToCart = ()=>{
+    addtocart({
+      productId: product._id,
+      quantity: 1,
+    })
+  }
   return (
     <Card width="100%" height="100%" position={"relative"} bg={"transparent"}>
       <CardBody p={0} width={"100%"} height={"100%"}>
+        {}
         <Image
-          src="/products/demoproduct.jpeg"
+          src={product.images[0].filepath}
           objectFit={"contain"}
           width={"100%"}
           maxH={"320px"}
           boxShadow={"cardShadow"}
           border={"1px solid #000"}
           outline={"none"}
-          alt="Green double couch with wooden legs"
+          alt={product.images[0].filename}
           borderRadius="15"
         />
         <Box
@@ -79,7 +83,7 @@ export default function ProductCard({ children, prize }) {
                 fontSize={{ lg: "large", md: "medium", sm: "small" }}
                 fontWeight={600}
               >
-                {children}
+                {product.title}
               </Text>
               <Heading
                 as={"h5"}
@@ -91,19 +95,11 @@ export default function ProductCard({ children, prize }) {
                 }}
                 textTransform={"uppercase"}
               >
-                PKR {prize}
+                PKR {product.prize}
               </Heading>
             </Box>
             <GlobalButton
-              onClick={() =>
-                toast({
-                  title: "Added To Cart",
-                  description: "Item added to cart successfully",
-                  status: "success",
-                  duration: 9000,
-                  isClosable: true,
-                })
-              }
+              onClick={handleAddToCart}
               mt={2}
               bg={"secondary"}
               p={5}
