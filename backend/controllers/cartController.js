@@ -2,6 +2,7 @@
 
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
+const reviewModel = require("../models/reviewModel");
 // Controller method to add item to cart
 
 const getCart = async (req, res) => {
@@ -14,13 +15,10 @@ const getCart = async (req, res) => {
       return null;
     }
 
-    // Extract productIds from cart items
     const productIds = cartItems.map((item) => item.productId);
 
-    // Lookup products based on productIds
     const products = await Product.find({ _id: { $in: productIds } });
 
-    // Map product details to each cart item
     const cartWithProductDetails = cartItems.map((item) => {
       const product = products.find(
         (product) => product._id.toString() === item.productId.toString()
@@ -39,25 +37,34 @@ const addItemToCart = async (req, res) => {
   const { userId, productId, quantity, color } = req.body;
 
   try {
-    // Check if item already exists in the cart
     let cartItem = await Cart.findOne({ userId, productId, color });
 
     if (cartItem) {
-      // If item exists, update quantity
       cartItem.quantity += quantity;
       await cartItem.save();
     } else {
-      // If item does not exist, create new cart item
       cartItem = new Cart({ userId, productId, quantity, color });
       await cartItem.save();
     }
+
     const product = await Product.findById(productId);
 
-    res.status(200).json({ cartItem, product });
+    // Combine cartItem and product into a single object
+    const item = {
+      ...cartItem._doc,
+      product: product._doc
+    };
+
+    res.status(200).json(item); // Return the combined item object
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    console.error("Error adding item to cart:", err);
+    res.status(500).json({ success: false, error: "Failed to add item to cart" });
   }
 };
+
+
+
+
 
 // Controller method to remove item from cart
 const removeItemFromCart = async (req, res) => {
@@ -117,12 +124,10 @@ const updateCartItemQuantity = async (req, res) => {
     cartItem.quantity = quantity;
     await cartItem.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Cart item quantity updated successfully",
-      });
+    res.status(200).json({
+      success: true,
+      message: "Cart item quantity updated successfully",
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -133,5 +138,5 @@ module.exports = {
   addItemToCart,
   removeItemFromCart,
   updateCartItemQuantity,
-  clearCart
+  clearCart,
 };

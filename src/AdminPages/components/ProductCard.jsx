@@ -19,10 +19,11 @@ import { useAddToCart } from "../../hooks/useAddToCart";
 
 export default function ProductCard({ product }) {
   const { dispatch } = useProductsContext();
+  
 
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {addtocart,isLoading,error,responseG} = useAddToCart();
+  const { addtocart, isLoading, error, responseG } = useAddToCart();
 
   const handleDelete = async () => {
     const response = await axios.delete(
@@ -58,34 +59,33 @@ export default function ProductCard({ product }) {
     return Math.floor(differenceInTime / (1000 * 3600 * 24));
   };
 
-  const handleAddToCart = ()=>{
+  const handleAddToCart = () => {
     addtocart({
       productId: product._id,
       quantity: 1,
-    })
-
-  }
-  useEffect(()=>{
-    if(responseG){
+    });
+  };
+  useEffect(() => {
+    if (responseG) {
       toast({
         title: `${product.title} added to cart!`,
         description: responseG.message,
         status: responseG.type,
         duration: 5000,
         isClosable: true,
-      })
+      });
 
-      if(responseG.type === "error"){
+      if (responseG.type === "error") {
         toast({
           title: `An error occured`,
           description: responseG.message,
           status: responseG.status,
           duration: 9000,
           isClosable: true,
-        })
+        });
       }
     }
-  })
+  });
   return (
     <Box
       maxW="sm"
@@ -160,7 +160,12 @@ export default function ProductCard({ product }) {
               />
             </Link>
 
-            <IconButton onClick={handleAddToCart} colorScheme="purple" aria-label="Add To Cart" icon={<FiShoppingCart/>} />
+            <IconButton
+              onClick={handleAddToCart}
+              colorScheme="purple"
+              aria-label="Add To Cart"
+              icon={<FiShoppingCart />}
+            />
           </Flex>
         </Box>
       </Box>

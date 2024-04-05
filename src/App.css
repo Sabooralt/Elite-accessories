@@ -17,6 +17,7 @@
 a.active > button {
   padding: 10px 40px;
   position: absolute;
+  pointer-events: none;
   
   left: 10px;
   font-size: 1.6rem;

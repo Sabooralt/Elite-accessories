@@ -7,73 +7,253 @@ import {
   GridItem,
   HStack,
   Heading,
+  Icon,
+  IconButton,
+  Spinner,
   Stack,
+  Tag,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
 import { FaRegStar } from "react-icons/fa6";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
+import useVoteReview from "../hooks/useVoteReview";
+import { useAuthContextProvider } from "../hooks/useAuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import NumberFormatter from "./NumberFormatter";
 
-export const ReviewsCard = () => {
-  const stars = Array(5).fill(null);
+export const ReviewsCard = ({ review, product }) => {
+  const { user } = useAuthContextProvider();
+  const { voteReview, loading, error } = useVoteReview();
+
+  const handleVote = (voteType) => {
+    voteReview(review._id, voteType);
+  };
+  const getBackgroundColorUp = (review, userId) => {
+    return review.downvotedBy.includes(userId) ? "buttonColor" : "#d93a00";
+  };
+  const getBackgroundColorDown = (review, userId) => {
+    return review.upvotedBy.includes(userId) ? "buttonColor" : "#6A5CFF";
+  };
+  const backgroundColorUp = getBackgroundColorUp(review, user._id);
+  const backgroundColorDown = getBackgroundColorDown(review, user._id);
+  const isVoted =
+    review.upvotedBy.includes(user._id) ||
+    review.downvotedBy.includes(user._id);
+  const isUpvoted = review.upvotedBy.includes(user._id);
+  const isDownvoted = review.downvotedBy.includes(user._id);
 
   return (
     <>
-      <Box w="100%" p={10}>
-        <Grid templateColumns="repeat(2,1fr)" gap={4}>
-          <GridItem
-          
-            sx={{
-                padding: '1.25em 1.25em 0.7em 1.25em'
-            }}
-            border='1px solid #000'
-            borderRadius="27px"
-            boxShadow="customShadow"
-            bg="primaryGradient"
+      <GridItem
+        sx={{
+          padding: "1.25em 1.25em 0.7em 1.25em",
+        }}
+        height="fit-content"
+        border="1px solid #000"
+        borderRadius="27px"
+        boxShadow="customShadow"
+        bg="primaryGradient"
+      >
+        <HStack justifyContent="space-between">
+          <HStack gap="1">
+            <Avatar
+              border="2px solid #000"
+              boxShadow="circleShadow"
+              size="md"
+              name={user.fullName}
+            ></Avatar>
+            <Heading fontSize="large" fontWeight="600">
+              {user.fullName}
+            </Heading>
+            <CommentSVG />
+          </HStack>
+
+          <HStack spacing="0">
+            <StarRating rating={review.rating} />
+          </HStack>
+        </HStack>
+
+        <HStack mt={2} spacing={2}>
+          {review.tags ? review.tags.map((tag) => <Tag>{tag}</Tag>) : null}
+        </HStack>
+
+        <Box mt={1} ml={1}>
+          <Text>{review.body}</Text>
+        </Box>
+
+        <Box
+          position={"relative"}
+          bottom="0"
+          mt="5"
+          ml={1}
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems="center"
+        >
+          <Text color="GrayText">
+            {formatDistanceToNow(new Date(review.createdAt), {
+              addSuffix: true,
+            })}
+          </Text>
+
+          <HStack
+          overflow='hidden'
+          position='relative'
+            borderRadius="customB"
+            color={!isVoted ? "#000" : "#fff"}
+            bg={
+              isUpvoted
+                ? backgroundColorUp
+                : isDownvoted
+                ? backgroundColorDown
+                : "buttonColor"
+            }
+            spacing={0.5}
+            pr={3}
           >
-            <HStack justifyContent="space-between">
-              <HStack gap="1">
-                <Avatar
-                  border="2px solid #000"
-                  boxShadow="circleShadow"
-                  size="md"
-                  name="Abdul Saboor"
-                ></Avatar>
-                <Heading fontSize="large" fontWeight="600">
-                  Abdul Saboor
-                </Heading>
-                <CommentSVG />
-              </HStack>
+            <IconButton
+              onClick={() => handleVote("upvote")}
+              _hover={{
+                background: isUpvoted
+                  ? "#962900"
+                  : isDownvoted
+                  ? "#453bb5"
+                  : "#e2e7e9",
+                color: !isVoted ? "#D93A00" : "",
+              }}
+              borderRadius="50%"
+              p="3"
+              minWidth="fit-content"
+              variant="unstyled"
+              icon={
+                isUpvoted ? (
+                  <ArrowRedditFilled />
+                ) : (
+                  <ArrowRedditUp fill={isVoted ? "#fff" : "#000"} />
+                )
+              }
+            />
+            <AnimatePresence mode="wait">
+              <motion.Text
+                key={review.upvotes}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.08 }}
+                w="fit-content"
+                sx={{
+                  position: 'relative',
+                  overflow: "hidden",
+                }}
+              >
 
-              <HStack spacing="0">
-                {stars.map((_, index) => (
-                  <FaRegStar
-                    fill="#000"
-                    color="#EED91F"
-                    fontSize="22"
-                    key={index}
-                  />
-                ))}
-              </HStack>
-            </HStack>
-
-            <Box mt={1} ml={1}>
-              <Text>Cover kay sath tum q nhi ai , Not Recommended</Text>
-            </Box>
-
-            <Box position={'relative'} bottom='0' mt='5' ml={1}>
-
-                <Text color='GrayText'>
-                    a minute ago
-                    </Text>
-
-            </Box>
-          </GridItem>
-          <GridItem>askldjklajsd</GridItem>
-          <GridItem>askldjklajsd</GridItem>
-        </Grid>
-      </Box>
+                <NumberFormatter value={review.upvotes}/>
+                
+              </motion.Text>
+            </AnimatePresence>
+            <IconButton
+              onClick={() => handleVote("downvote")}
+              _hover={{
+                background: isUpvoted
+                  ? "#962900"
+                  : isDownvoted
+                  ? "#453bb5"
+                  : "#e2e7e9",
+              }}
+              sx={{
+                transform: "rotate(180deg)",
+              }}
+              borderRadius="50%"
+              p="3"
+              minWidth="fit-content"
+              variant="unstyled"
+              icon={
+                isDownvoted ? (
+                  <ArrowRedditFilled />
+                ) : (
+                  <ArrowRedditUp fill={isVoted ? "#fff" : "#000"} />
+                )
+              }
+            />
+            <AnimatePresence mode="wait">
+              <motion.Text
+                key={review.downvotes}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.15 }}
+                w="fit-content"
+                sx={{
+                  overflow: "hidden",
+                }}
+              >
+                <NumberFormatter value={review.downvotes}/>
+              </motion.Text>
+            </AnimatePresence>
+            {error && <p>Error: {error}</p>}
+          </HStack>
+        </Box>
+      </GridItem>
     </>
+  );
+};
+
+export const StarRating = ({ rating, size }) => {
+  const stars = [];
+  const MAX_STARS = 5;
+
+  for (let i = 0; i < rating; i++) {
+    stars.push(<FilledStar width={22} height={22} key={i} color="#ffc107" />);
+  }
+
+  const remainingStars = MAX_STARS - rating;
+  for (let i = 0; i < remainingStars; i++) {
+    stars.push(<UnFilledStar width={22} height={22} key={`empty-${i}`} />);
+  }
+
+  return <>{stars}</>;
+};
+
+export const FilledStar = ({ fill,width,height }) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 27 26"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.06074 8.43387L12.19 2.13068C12.5916 1.32151 13.7522 1.32151 14.1538 2.13068L17.283 8.43387L24.2809 9.45087C25.1788 9.58135 25.5366 10.6787 24.8867 11.3082L19.8238 16.2111L21.0186 23.1376C21.1721 24.0272 20.2331 24.7054 19.4297 24.2853L13.1719 21.0133L6.9141 24.2853C6.11073 24.7054 5.17166 24.0272 5.32509 23.1376L6.5199 16.2111L1.4572 11.3082C0.807169 10.6787 1.16502 9.58135 2.06288 9.45087L9.06074 8.43387Z"
+        fill="#EED91F"
+        stroke="black"
+        stroke-width="1.80703"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+export const UnFilledStar = ({width,height}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 27 26"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.58711 8.43375L12.7163 2.13056C13.118 1.32139 14.2786 1.32139 14.6802 2.13056L17.8094 8.43375L24.8073 9.45075C25.7052 9.58123 26.063 10.6786 25.413 11.3081L20.3502 16.211L21.545 23.1375C21.6985 24.0271 20.7594 24.7053 19.956 24.2852L13.6983 21.0132L7.44047 24.2852C6.6371 24.7053 5.69803 24.0271 5.85146 23.1375L7.04627 16.211L1.98356 11.3081C1.33354 10.6786 1.69139 9.58123 2.58924 9.45075L9.58711 8.43375Z"
+        stroke="black"
+        stroke-width="1.80703"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
   );
 };
 export const CommentSVG = () => {
@@ -103,6 +283,36 @@ export const CommentSVG = () => {
         stroke-linecap="round"
         stroke-linejoin="round"
       />
+    </svg>
+  );
+};
+export const ArrowRedditUp = ({ fill }) => {
+  return (
+    <svg
+      rpl=""
+      fill={fill}
+      height="16"
+      icon-name="upvote-outline"
+      viewBox="0 0 20 20"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M12.877 19H7.123A1.125 1.125 0 0 1 6 17.877V11H2.126a1.114 1.114 0 0 1-1.007-.7 1.249 1.249 0 0 1 .171-1.343L9.166.368a1.128 1.128 0 0 1 1.668.004l7.872 8.581a1.25 1.25 0 0 1 .176 1.348 1.113 1.113 0 0 1-1.005.7H14v6.877A1.125 1.125 0 0 1 12.877 19ZM7.25 17.75h5.5v-8h4.934L10 1.31 2.258 9.75H7.25v8ZM2.227 9.784l-.012.016c.01-.006.014-.01.012-.016Z"></path>{" "}
+    </svg>
+  );
+};
+export const ArrowRedditFilled = () => {
+  return (
+    <svg
+      rpl=""
+      fill="currentColor"
+      height="16"
+      icon-name="upvote-fill"
+      viewBox="0 0 20 20"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z"></path>
     </svg>
   );
 };

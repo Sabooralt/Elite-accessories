@@ -29,22 +29,22 @@ import { useClearCart } from "../hooks/useClearCart";
 
 export default function MyCart() {
   const { items, dispatch } = useCartContext();
-  const {clearCart,isLoading,responseG} = useClearCart();
+  const { clearCart, isLoading, responseG } = useClearCart();
   const toast = useToast();
 
-  const handleClearCart = ()=>{
-clearCart();
-  }
+  const handleClearCart = () => {
+    clearCart();
+  };
 
-  useEffect(()=>{
-    if(responseG){
+  useEffect(() => {
+    if (responseG) {
       toast({
         title: responseG.type,
         description: responseG.message,
-        status: responseG.type
-      })
+        status: responseG.type,
+      });
     }
-  })
+  });
 
   const handleItemDelete = async (item) => {
     try {
@@ -177,7 +177,11 @@ clearCart();
                 <Th></Th>
 
                 <Th isNumeric>
-                  <GlobalButton onClick={handleClearCart} bg="secondary" borderRadius="0">
+                  <GlobalButton
+                    onClick={handleClearCart}
+                    bg="secondary"
+                    borderRadius="0"
+                  >
                     Clear Cart
                   </GlobalButton>
                 </Th>

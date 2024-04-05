@@ -1,12 +1,23 @@
+import { Box, Grid, Heading } from "@chakra-ui/react";
 import { ReviewsCard } from "../components/ReviewsCard";
-
-
+import { useReviewContext } from "../hooks/useReviewContext";
 
 export default function Reviews() {
-  return(
+  const { state } = useReviewContext();
+  const {reviews} = state;
+  console.log("reviews:", reviews);
+  return (
     <>
-    <ReviewsCard/>
+      <Box w="100%" p={10}>
+        <Grid templateColumns="repeat(2,1fr)" gap={4}>
+          {reviews ?
+            reviews.map(({ review, product, user }) => (
+              <>
+              <ReviewsCard review={review} product={product} />
+              </>
+            )): <Heading>No Reviews rn/</Heading>}
+        </Grid>
+      </Box>
     </>
-  )
+  );
 }
-

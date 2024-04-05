@@ -22,7 +22,7 @@ export const cartReducer = (state, action) => {
           };
           return { ...state, items: updatedItems };
         } else {
-          return { ...state, items: [...state.items, action.payload.product] };
+          return { ...state, items: [...state.items, action.payload] };
         }
       case "REMOVE_FROM_CART":
         const filteredItems = state.items.filter(
