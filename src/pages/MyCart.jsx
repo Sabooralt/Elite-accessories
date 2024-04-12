@@ -19,18 +19,29 @@ import {
   Stack,
   Divider,
   useToast,
+  HStack,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCartContext } from "../hooks/useCartContext";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { GlobalButton } from "../components/GlobalButton";
 import { Link } from "react-router-dom";
 import { useClearCart } from "../hooks/useClearCart";
+import { useUpdateCartQuantity } from "../hooks/useUpdateCartQuantity";
 
 export default function MyCart() {
   const { items, dispatch } = useCartContext();
   const { clearCart, isLoading, responseG } = useClearCart();
+  const [newQuantity, setNewQuantity] = useState();
+  const { updateQuantity } = useUpdateCartQuantity();
   const toast = useToast();
+
+  //Handle Quantity
+
+  const handleQuantity = (id, operation) => {
+    updateQuantity(id, operation);
+  };
+  
 
   const handleClearCart = () => {
     clearCart();
@@ -131,26 +142,45 @@ export default function MyCart() {
                       />
                       <Box>
                         <Text>{item && item.product.title}</Text>
-                        {item.color && (
-                          <Text
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="start"
-                            gap="10px"
-                          >
-                            Color:{" "}
-                            <SkeletonCircle
-                              color={item.color}
-                              bg={item.color}
-                              size="6"
-                              isLoaded
-                            />
-                          </Text>
-                        )}
+
+                        <Text
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="start"
+                          gap="10px"
+                        >
+                          Color:{" "}
+                          <SkeletonCircle
+                            color={item.color}
+                            bg={item.color}
+                            size="6"
+                            isLoaded
+                          />
+                        </Text>
                       </Box>
                     </Td>
                     <Td>{item && item.product.price}</Td>
-                    <Td isNumeric>{item && item.quantity}</Td>
+                    <Td isNumeric>
+                      <Stack alignItems='center'>
+                        <Box>
+
+                        {item && item.quantity}
+                       
+                        </Box>
+                        <HStack w="fit-content">
+                          <Box cursor='pointer' p={1} w="fit-content" bg="primary" onClick={()=> handleQuantity(item._id,"decrement")}>
+                            <Text fontSize="xx-large" m={0}>
+                              -
+                            </Text>
+                          </Box>
+                          <Box cursor='pointer' p={1} w="fit-content" bg="primary" onClick={()=> handleQuantity(item._id,"increment")}>
+                            <Text fontSize="x-large" m={0}>
+                              +
+                            </Text>
+                          </Box>
+                        </HStack>
+                      </Stack>
+                    </Td>
                     <Td isNumeric>Rs.{calculateItemSubtotal(item)}</Td>
 
                     <Td isNumeric>

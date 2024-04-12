@@ -24,7 +24,17 @@ const getAllReviews = async (req, res) => {
       const user = users.find(
         (user) => user._id.toString() === review.userId.toString()
       );
-      return { review, product, user };
+      return {
+        review,
+        product: {
+          _id: product._id,
+          title: product.title,
+        },
+        user: {
+          _id: user._id,
+          fullName: user.fullName,
+        },
+      };
     });
 
     res.status(200).json(reviewsWithDetails);
@@ -56,13 +66,15 @@ const createReview = async (req, res) => {
       Product.findById(productId),
       User.findById(userId),
     ]);
-
+    
     const responseObject = {
       review: review.toObject(),
       product: product.toObject(),
-      user: user.toObject(),
+      user: {
+        fullName: user.fullName,
+      },
     };
-
+    
     res.status(201).json(responseObject);
   } catch (err) {
     res
@@ -131,7 +143,9 @@ const voteReview = async (req, res) => {
     }
 
     // Update the review
-    const updatedReview = await Review.findByIdAndUpdate(reviewId, update, { new: true });
+    const updatedReview = await Review.findByIdAndUpdate(reviewId, update, {
+      new: true,
+    });
 
     res.status(200).json(updatedReview);
   } catch (error) {
@@ -140,5 +154,4 @@ const voteReview = async (req, res) => {
   }
 };
 
-
-module.exports = { getAllReviews, createReview,voteReview };
+module.exports = { getAllReviews, createReview, voteReview };

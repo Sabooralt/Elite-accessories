@@ -52,19 +52,17 @@ const addItemToCart = async (req, res) => {
     // Combine cartItem and product into a single object
     const item = {
       ...cartItem._doc,
-      product: product._doc
+      product: product._doc,
     };
 
     res.status(200).json(item); // Return the combined item object
   } catch (err) {
     console.error("Error adding item to cart:", err);
-    res.status(500).json({ success: false, error: "Failed to add item to cart" });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to add item to cart" });
   }
 };
-
-
-
-
 
 // Controller method to remove item from cart
 const removeItemFromCart = async (req, res) => {
@@ -107,12 +105,11 @@ const clearCart = async (req, res) => {
 
 // Controller method to update quantity of item in cart
 const updateCartItemQuantity = async (req, res) => {
-  const { userId, productId, color } = req.params;
-  const { quantity } = req.body;
+  const { id } = req.params;
+  const { operation } = req.body; 
 
   try {
-    // Find cart item by userId, productId, and color
-    let cartItem = await Cart.findOne({ userId, productId, color });
+    let cartItem = await Cart.findOne({ _id: id });
 
     if (!cartItem) {
       return res
@@ -120,14 +117,28 @@ const updateCartItemQuantity = async (req, res) => {
         .json({ success: false, error: "Cart item not found" });
     }
 
-    // Update quantity
-    cartItem.quantity = quantity;
+    if (operation === "increment") {
+      cartItem.quantity++;
+    } else if (operation === "decrement") {
+      if (cartItem.quantity > 1) {
+        cartItem.quantity--;
+      } else {
+        return res.status(400).json({
+          success: false,
+          error: "Quantity cannot be less than 1",
+        });
+      }
+    } else {
+      return res.status(400).json({
+        success: false,
+        error:
+          "Invalid operation. Operation must be 'increment' or 'decrement'.",
+      });
+    }
+
     await cartItem.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Cart item quantity updated successfully",
-    });
+    res.status(200).json(cartItem);
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

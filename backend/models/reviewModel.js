@@ -23,7 +23,7 @@ const reviewSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'User'
     }],
-    tags: [{ type: String }],
+    tags: [{ type: String, default: [] }],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   }, { timestamps: true });
   

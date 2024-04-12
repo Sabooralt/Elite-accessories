@@ -11,9 +11,9 @@ export default function Reviews() {
       <Box w="100%" p={10}>
         <Grid templateColumns="repeat(2,1fr)" gap={4}>
           {reviews ?
-            reviews.map(({ review, product, user }) => (
+            reviews.map(({ review , user , product}) => (
               <>
-              <ReviewsCard review={review} product={product} />
+              <ReviewsCard review={review} reviewBy={user} product={product}/>
               </>
             )): <Heading>No Reviews rn/</Heading>}
         </Grid>

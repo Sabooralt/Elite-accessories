@@ -18,48 +18,78 @@ a.active > button {
   padding: 10px 40px;
   position: absolute;
   pointer-events: none;
-  
+
   left: 10px;
   font-size: 1.6rem;
 }
 @font-face {
-    font-family: Poppins;
-    src: url('../public/fonts/Poppins/Poppins-Regular.ttf');
+  font-family: Poppins;
+  src: url("../public/fonts/Poppins/Poppins-Regular.ttf");
 }
 ::placeholder {
-color: #00000030 !important;
-font-size: 1.4rem;
-font-weight: 500;
-text-align: center;
-letter-spacing: .5px;
+  color: #00000030 !important;
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #000;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Carousel CSS */
-.custom-swiper-btns{
-    padding: 0 5px;
-    width: 100%;
-    background-color: transparent;
-    position: absolute;
-    top: 50%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 9;
-    left: 0;
+.custom-swiper-btns {
+  padding: 0 5px;
+  width: 100%;
+  background-color: transparent;
+  position: absolute;
+  top: 50%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 9;
+  left: 0;
 }
-.custom-prev{
-
+.beforeBG::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgb(0 0 0 / 90%), rgb(0 0 0 / 90%));
+  z-index: 1; /* Ensure the gradient is behind */
 }
-.custom-next,.custom-prev{
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   height: 50px;
-    width: 50px;
-
-}.slide-in{
+.custom-next,
+.custom-prev {
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 50px;
+}
+.slide-in {
   position: fixed;
   background-color: #0f0f0f;
   top: 0;
@@ -69,7 +99,7 @@ letter-spacing: .5px;
   transform-origin: bottom;
   z-index: 10;
 }
-.slide-out{
+.slide-out {
   position: fixed;
   background-color: #0f0f0f;
   top: 0;
@@ -79,4 +109,8 @@ letter-spacing: .5px;
   transform-origin: top;
   z-index: 10;
 }
-
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

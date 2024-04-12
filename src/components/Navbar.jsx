@@ -1,4 +1,4 @@
-import { Icon} from "@chakra-ui/icons";
+import { ArrowForwardIcon, Icon } from "@chakra-ui/icons";
 import {
   Flex,
   FormControl,
@@ -18,27 +18,45 @@ import {
   MenuItem,
   IconButton,
   AvatarBadge,
+  Stack,
+  Image,
+  Highlight,
+  Button,
 } from "@chakra-ui/react";
 import {
   faFacebook,
   faInstagram,
-  faSearchengin,
   faWhatsapp,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Form, Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { GlobalButton } from "./GlobalButton";
+import { useProductsContext } from "../hooks/useProductsContext";
 import { useAuthContextProvider } from "../hooks/useAuthContext";
 import { useLogout } from "../hooks/useLogout";
 import { useCartContext } from "../hooks/useCartContext";
-import { FiEdit2, FiEye, FiShoppingCart } from "react-icons/fi";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { MdOutlineShoppingCart } from "react-icons/md";
+
+import { useState } from "react";
 
 export default function Header() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const { products } = useProductsContext() || { products: [] };
   const { user } = useAuthContextProvider();
   const { items } = useCartContext();
+  const navigate = useNavigate();
   const { logout } = useLogout();
+
+  const filteredProducts =
+    products &&
+    products.filter((product) =>
+      product.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  const displayedProducts = filteredProducts && filteredProducts.slice(0, 5);
+
+  const handleSearch = ()=>{
+   navigate(`/products/search/results?query=${searchQuery}`);
+  }
 
   const handleLogout = () => {
     logout();
@@ -61,7 +79,7 @@ export default function Header() {
           </Heading>
         </Box>
 
-        <Box flexGrow={1}>
+        <Box flexGrow={1} position="relative">
           <InputGroup
             bg={"#D9D9D9"}
             borderRadius={30}
@@ -69,7 +87,7 @@ export default function Header() {
             alignItems={"center"}
           >
             <InputLeftAddon bg={"transparent"} border={0}>
-              <SearchIcon/>
+              <SearchIcon />
             </InputLeftAddon>
             <Input
               fontSize={"x-large"}
@@ -80,8 +98,118 @@ export default function Header() {
               placeholder="Elite Accessories"
               border={0}
               borderRadius={30}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </InputGroup>
+
+          {searchQuery && (
+            <Stack
+              spacing={0}
+              p={5}
+              bg="#000"
+              sx={{
+                position: "absolute",
+                top: "55px",
+                zIndex: 10,
+                width: "100%",
+                textTransform: "capitalize",
+              }}
+            >
+              {displayedProducts.map((product) => (
+                <Box
+                  key={product._id}
+                  color="#fff"
+                  bg="#000"
+                  p={5}
+                  display="flex"
+                  flex="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  gap="0.5rem"
+                >
+                  <Box
+                    display="flex"
+                    flex="row"
+                    gap="0.5rem"
+                    alignItems={"center"}
+                  >
+                    <Image
+                      borderRadius="50%"
+                      border="2px solid #AFEE1F"
+                      h="70px"
+                      w="70px"
+                      objectFit="contain"
+                      src={product.images[0].filepath}
+                    />
+                    <Stack spacing={2}>
+                      <Heading fontSize="large" m={0}>
+                        <Highlight
+                          query={searchQuery}
+                          styles={{
+                            color: "primary",
+                          }}
+                        >
+                          {product.title}
+                        </Highlight>
+                      </Heading>
+                      <Text
+                        m={0}
+                        color={"lightgray"}
+                        fontSize="medium"
+                        fontWeight="600"
+                      >
+                        &bull;{" "}
+                        <Highlight
+                          query={searchQuery}
+                          styles={{
+                            color: "primary",
+                          }}
+                        >
+                          {product.category.name}
+                        </Highlight>
+                      </Text>
+                      <Box
+                        gap="7px"
+                        display={"flex"}
+                        flexDirection="row"
+                        justifyContent="flex-start"
+                        alignItems={"center"}
+                        maxW={"100%"}
+                        overflow={"hidden"}
+                        flexWrap={"nowrap"}
+                      >
+                        {product.phoneModels.length > 0 ? (
+                          JSON.parse(product.phoneModels).map((model) => (
+                            <Text
+                              m={0}
+                              color={"lightgray"}
+                              fontSize={"smaller"}
+                            >
+                              {model}
+                            </Text>
+                          ))
+                        ) : (
+                          <Text>{product.phoneModels}</Text>
+                        )}
+                      </Box>
+                    </Stack>
+                  </Box>
+
+                  <Text fontWeight="600">Rs.{product.price}</Text>
+                </Box>
+              ))}
+              <Box className="center">
+                <Button
+                  variant="outline"
+                  rightIcon={<ArrowForwardIcon />}
+                  colorScheme="pink"
+                  onClick={handleSearch}
+                >
+                  Show All{" "}
+                </Button>
+              </Box>
+            </Stack>
+          )}
         </Box>
 
         {user && (
@@ -97,9 +225,7 @@ export default function Header() {
                   bg={"red.500"}
                   size="md"
                   name={user.fullName}
-                >
-                  {/* You can add any content inside the Avatar component if you wish */}
-                </MenuButton>
+                ></MenuButton>
                 <MenuList>
                   <MenuItem>My Account</MenuItem>
                   <MenuItem>Payments</MenuItem>
@@ -161,8 +287,8 @@ export const NavLinks = () => {
     },
     {
       name: "Product",
-      link: "/product"
-    }
+      link: "/product",
+    },
   ];
 
   const location = useLocation();

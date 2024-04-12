@@ -20,6 +20,7 @@ import { FaHeart } from "react-icons/fa";
 import { useAddToCart } from "../hooks/useAddToCart";
 import ReviewModal from "./ReviewModal";
 import { useAddReview } from "../hooks/useAddReview";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,6 +44,7 @@ export default function ProductCard({ product }) {
       ></ReviewModal>
       <Card width="100%" height="100%" position={"relative"} bg={"transparent"}>
         <CardBody p={0} width={"100%"} height={"100%"}>
+    <Link to={`products/${product._id}`}>
           {}
           <Image
             src={product.images[0].filepath}
@@ -73,6 +75,7 @@ export default function ProductCard({ product }) {
               color="#E31F1F"
             />
           </Box>
+          </Link>
 
           <CardFooter px={0} justifyContent={"center"} position={"relative"}>
             <VStack w={"100%"}>
@@ -135,7 +138,7 @@ export default function ProductCard({ product }) {
           </CardFooter>
         </CardBody>
       </Card>
-    </>
+</>
   );
 }
 export const HeartIcon = () => {

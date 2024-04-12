@@ -12,4 +12,4 @@ function About() {
     </Center>
        </>
   )
-} export default PrivacyScreen(About)
+} export default About

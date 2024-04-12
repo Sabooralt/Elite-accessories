@@ -1,46 +1,56 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const productSchema = new Schema({
+const productSchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     price: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     category: {
-        
-        type: Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
     },
-    colors: [{
+    colors: [
+      {
         type: String,
-        required: true
-    }],
-    phoneModels: [{
-        type: String,
-        required: true
-    }],
-    // Add a field to store image metadata
-    images: [{
+        default: "",
+      },
+    ],
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    phoneModels: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    images: [
+      {
         filename: {
-            type: String,
-            required: false
+          type: String,
+          required: false,
         },
         filepath: {
-            type: String,
-            required: false
-        }
+          type: String,
+          required: false,
+        },
         // Add more fields as needed (e.g., file size, file type)
-    }]
-}, { timestamps: true });
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model("Product", productSchema);

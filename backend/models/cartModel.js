@@ -16,6 +16,9 @@ const cartSchema = new mongoose.Schema({
   color: {
     type: String,
   },
+  phoneModel : {
+    type: String,
+  },
   quantity: {
     type: Number,
     required: true,

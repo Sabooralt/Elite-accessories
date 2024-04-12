@@ -24,7 +24,7 @@ import { useAuthContextProvider } from "../hooks/useAuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import NumberFormatter from "./NumberFormatter";
 
-export const ReviewsCard = ({ review, product }) => {
+export const ReviewsCard = ({ review, product, reviewBy }) => {
   const { user } = useAuthContextProvider();
   const { voteReview, loading, error } = useVoteReview();
 
@@ -58,17 +58,20 @@ export const ReviewsCard = ({ review, product }) => {
         bg="primaryGradient"
       >
         <HStack justifyContent="space-between">
-          <HStack gap="1">
+          <HStack gap="1" color={"textC"}>
             <Avatar
               border="2px solid #000"
               boxShadow="circleShadow"
               size="md"
-              name={user.fullName}
+              name={reviewBy.fullName}
             ></Avatar>
             <Heading fontSize="large" fontWeight="600">
-              {user.fullName}
+              {reviewBy.fullName}
             </Heading>
+            <Box mb={'7px'}>
+
             <CommentSVG />
+            </Box>
           </HStack>
 
           <HStack spacing="0">
@@ -80,7 +83,7 @@ export const ReviewsCard = ({ review, product }) => {
           {review.tags ? review.tags.map((tag) => <Tag>{tag}</Tag>) : null}
         </HStack>
 
-        <Box mt={1} ml={1}>
+        <Box mt={1} ml={1} color={"textC"}>
           <Text>{review.body}</Text>
         </Box>
 
@@ -93,15 +96,15 @@ export const ReviewsCard = ({ review, product }) => {
           justifyContent={"space-between"}
           alignItems="center"
         >
-          <Text color="GrayText">
+          <Text m={0} color="GrayText">
             {formatDistanceToNow(new Date(review.createdAt), {
               addSuffix: true,
             })}
           </Text>
 
           <HStack
-          overflow='hidden'
-          position='relative'
+            overflow="hidden"
+            position="relative"
             borderRadius="customB"
             color={!isVoted ? "#000" : "#fff"}
             bg={
@@ -137,22 +140,22 @@ export const ReviewsCard = ({ review, product }) => {
               }
             />
             <AnimatePresence mode="wait">
-              <motion.Text
+              <Text
+                as={motion.p}
                 key={review.upvotes}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.08 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.05 }}
                 w="fit-content"
                 sx={{
-                  position: 'relative',
+                  position: "relative",
                   overflow: "hidden",
                 }}
+                m={0}
               >
-
-                <NumberFormatter value={review.upvotes}/>
-                
-              </motion.Text>
+                <NumberFormatter value={review.upvotes} />
+              </Text>
             </AnimatePresence>
             <IconButton
               onClick={() => handleVote("downvote")}
@@ -179,19 +182,21 @@ export const ReviewsCard = ({ review, product }) => {
               }
             />
             <AnimatePresence mode="wait">
-              <motion.Text
+              <Text
+                as={motion.p}
+                m={0}
                 key={review.downvotes}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.15 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.05 }}
                 w="fit-content"
                 sx={{
                   overflow: "hidden",
                 }}
               >
-                <NumberFormatter value={review.downvotes}/>
-              </motion.Text>
+                <NumberFormatter value={review.downvotes} />
+              </Text>
             </AnimatePresence>
             {error && <p>Error: {error}</p>}
           </HStack>
@@ -217,7 +222,7 @@ export const StarRating = ({ rating, size }) => {
   return <>{stars}</>;
 };
 
-export const FilledStar = ({ fill,width,height }) => {
+export const FilledStar = ({ fill, width, height }) => {
   return (
     <svg
       width={width}
@@ -237,7 +242,7 @@ export const FilledStar = ({ fill,width,height }) => {
     </svg>
   );
 };
-export const UnFilledStar = ({width,height}) => {
+export const UnFilledStar = ({ width, height }) => {
   return (
     <svg
       width={width}
