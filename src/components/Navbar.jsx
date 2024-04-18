@@ -54,9 +54,9 @@ export default function Header() {
     );
   const displayedProducts = filteredProducts && filteredProducts.slice(0, 5);
 
-  const handleSearch = ()=>{
-   navigate(`/products/search/results?query=${searchQuery}`);
-  }
+  const handleSearch = () => {
+    navigate(`/products/search/results?query=${searchQuery}`);
+  };
 
   const handleLogout = () => {
     logout();
@@ -286,8 +286,8 @@ export const NavLinks = () => {
       link: "/admin",
     },
     {
-      name: "Product",
-      link: "/product",
+      name: "Products",
+      link: "/products",
     },
   ];
 

@@ -1,5 +1,6 @@
 const Product = require("../models/productModel");
 const mongoose = require("mongoose");
+const generateBlurHash = require("../utils/generateBlurHash");
 
 //Get products
 const getProducts = async (req, res) => {
@@ -35,6 +36,15 @@ const getProducts = async (req, res) => {
       },
     ]);
 
+    for (const product of productsWithCategory) {
+      const imageBlurHashes = [];
+      for (const image of product.images) {
+        const blurHash = await generateBlurHash(image.filepath);
+        imageBlurHashes.push(blurHash);
+      }
+      product.blurHashes = imageBlurHashes;
+    }
+
     res.status(200).json(productsWithCategory);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -66,8 +76,6 @@ const createProduct = async (req, res) => {
       filename: file.filename,
       filepath: file.path,
     }));
-
-    // Save the product data and image details to the database
     const product = await Product.create({
       title,
       price,

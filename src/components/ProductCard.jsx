@@ -13,7 +13,7 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GlobalButton } from "./GlobalButton";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { FaHeart } from "react-icons/fa";
@@ -21,9 +21,11 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import ReviewModal from "./ReviewModal";
 import { useAddReview } from "../hooks/useAddReview";
 import { Link } from "react-router-dom";
+import { Blurhash } from "react-blurhash";
 
 export default function ProductCard({ product }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [imageLoad, setImageLoad] = useState(false);
 
   const { addtocart } = useAddToCart();
 
@@ -33,6 +35,14 @@ export default function ProductCard({ product }) {
       quantity: 1,
     });
   };
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.onload = () => {
+      setImageLoad(true);
+    };
+    img.src = product.images[0].filepath;
+  }, [product.images]);
 
   return (
     <>
@@ -44,37 +54,56 @@ export default function ProductCard({ product }) {
       ></ReviewModal>
       <Card width="100%" height="100%" position={"relative"} bg={"transparent"}>
         <CardBody p={0} width={"100%"} height={"100%"}>
-    <Link to={`products/${product._id}`}>
-          {}
-          <Image
-            src={product.images[0].filepath}
-            objectFit={"contain"}
-            width={"100%"}
-            maxH={"320px"}
-            boxShadow={"cardShadow"}
-            border={"1px solid #000"}
-            outline={"none"}
-            alt={product.images[0].filename}
-            borderRadius="15"
-          />
-          <Box
-            position="absolute"
-            top="0"
-            right={0}
-            width={"fit-content"}
-            bg={"transparent"}
-            _hover={{}}
-          >
-            {/* Icon button */}
-            <IconButton
-              variant="unstyled"
-              icon={<HeartIcon/>}
-              aria-label="Like"
-              bg="transparent"
-              fontSize="2xl"
-              color="#E31F1F"
-            />
-          </Box>
+          <Link to={`products/${product._id}`}>
+            <Box
+              objectFit={"contain"}
+              bg='#000'
+              width={"100%"}
+              height={"400px"}
+              boxShadow={"cardShadow"}
+              border={"1px solid #000"}
+              outline={"none"}
+              borderRadius="15"
+              overflow={"hidden"}
+            >
+              <Blurhash
+                hash={product.blurHashes[0]}
+                width={"100%"}
+                height={"320px"}
+                resolutionX={32}
+                resolutionY={32}
+                punch={1}
+               style={{display: imageLoad ? "none" : "block"}}
+              />
+
+              <Image
+                src={product.images && product.images[0]?.filepath}
+                objectFit='contain'
+                width='100%'
+                height='100%'
+                alt={product.images && product.images[0]?.filename}
+                style={{ display: !imageLoad ? "none": "block" }}
+              />
+            </Box>
+
+            <Box
+              position="absolute"
+              top="0"
+              right={0}
+              width={"fit-content"}
+              bg={"transparent"}
+              _hover={{}}
+            >
+              {/* Icon button */}
+              <IconButton
+                variant="unstyled"
+                icon={<HeartIcon />}
+                aria-label="Like"
+                bg="transparent"
+                fontSize="2xl"
+                color="#E31F1F"
+              />
+            </Box>
           </Link>
 
           <CardFooter px={0} justifyContent={"center"} position={"relative"}>
@@ -113,7 +142,7 @@ export default function ProductCard({ product }) {
                   }}
                   textTransform={"uppercase"}
                 >
-                  PKR {product.prize}
+                  PKR {product.price}
                 </Heading>
               </Box>
               <GlobalButton
@@ -138,7 +167,7 @@ export default function ProductCard({ product }) {
           </CardFooter>
         </CardBody>
       </Card>
-</>
+    </>
   );
 }
 export const HeartIcon = () => {

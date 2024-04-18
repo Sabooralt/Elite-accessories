@@ -22,7 +22,7 @@ router.get("/:id", getProduct);
 //post
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, '../public/ProductImages/'); // Specify the directory where uploaded files will be stored
+      cb(null, '../public/ProductImages/'); 
   },
   filename: function (req, file, cb) {
     const uniqueFileName = `${uuidv4()}-${Date.now()}.jpg`;
