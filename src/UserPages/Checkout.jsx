@@ -101,7 +101,6 @@ export const Checkout = () => {
         width="60%"
         border="1px solid"
         display="grid"
-        placeItems="center"
         height='100%'
         position='relative'
       overflowY='auto'
@@ -109,7 +108,7 @@ export const Checkout = () => {
       >
         <AnimatePresence mode="wait">
 
-<motion.div key={activeStep} initial={{opacity: 0,}} animate={{opacity: 1}} exit={{opacity: 0}}>
+<motion.div key={activeStep} initial={{opacity: 0, y:10}} animate={{opacity: 1, y:0,}} exit={{opacity: 0,y:10}}transition={{duration: 0.2}}>
         {renderComponentForStep(activeStep)}
   </motion.div> 
         </AnimatePresence>
@@ -121,6 +120,10 @@ export const Checkout = () => {
           justifyContent="space-between"
           position='relative'
           bottom='0'
+          alignItems='flex-end'
+          flexWrap='wrap'
+          height='fit-content'
+          alignSelf='end'
           pt={5}
           
         >

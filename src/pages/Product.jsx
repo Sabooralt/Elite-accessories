@@ -152,7 +152,7 @@ export default function Product() {
               display: "flex",
               width: "90%",
               maxHeight: "90vh",
-              overflow: "scroll",
+              
 
               backgroundColor: "#000",
               backgroundImage: "url(/coverWhite.png)",

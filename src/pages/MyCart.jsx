@@ -25,7 +25,7 @@ import React, { useEffect, useState } from "react";
 import { useCartContext } from "../hooks/useCartContext";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { GlobalButton } from "../components/GlobalButton";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useClearCart } from "../hooks/useClearCart";
 import { useUpdateCartQuantity } from "../hooks/useUpdateCartQuantity";
 
@@ -33,6 +33,7 @@ export default function MyCart() {
   const { items, dispatch } = useCartContext();
   const { clearCart, isLoading, responseG } = useClearCart();
   const [newQuantity, setNewQuantity] = useState();
+  const navigate = useNavigate();
   const { updateQuantity } = useUpdateCartQuantity();
   const toast = useToast();
 
@@ -254,7 +255,7 @@ export default function MyCart() {
             </Stack>
 
           </Box>
-            <GlobalButton mt={5}>
+            <GlobalButton mt={5} onClick={()=> navigate("/user/Checkout")}>
               Checkout
             </GlobalButton>
         </TableContainer>

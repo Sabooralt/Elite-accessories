@@ -32,8 +32,9 @@ const theme = extendTheme({
     textC: "#000",
     brand: "#1E1E1E",
     primaryLight: "#C5FF42",
-    greyLight: "#D9D9D9",
+    greyLight: "#4C4D51",
     buttonColor: "#EAEDEF",
+
     
   },
   shadows: {
