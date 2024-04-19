@@ -90,6 +90,7 @@ export default function Header() {
               <SearchIcon />
             </InputLeftAddon>
             <Input
+            className="customPlaceholder"
               fontSize={"x-large"}
               fontWeight={600}
               height={12}
@@ -147,6 +148,7 @@ export default function Header() {
                           query={searchQuery}
                           styles={{
                             color: "primary",
+                            padding: 0,
                           }}
                         >
                           {product.title}
@@ -162,6 +164,7 @@ export default function Header() {
                         <Highlight
                           query={searchQuery}
                           styles={{
+                            padding: 0,
                             color: "primary",
                           }}
                         >
@@ -241,7 +244,7 @@ export default function Header() {
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faInstagram} />
           <FontAwesomeIcon size="2xl" color="#AFEE1F" icon={faWhatsapp} />
           {items && (
-            <Link to="/MyCart" cursor="pointer">
+            <Link to="/user/MyCart" cursor="pointer">
               <Icon size="2xl" color="#AFEE1F" as={cart} />
               <Heading className="text-white">{items.length}</Heading>
             </Link>

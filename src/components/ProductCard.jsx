@@ -57,7 +57,7 @@ export default function ProductCard({ product }) {
           <Link to={`products/${product._id}`}>
             <Box
               objectFit={"contain"}
-              bg='#000'
+              bg="#000"
               width={"100%"}
               height={"400px"}
               boxShadow={"cardShadow"}
@@ -69,20 +69,20 @@ export default function ProductCard({ product }) {
               <Blurhash
                 hash={product.blurHashes[0]}
                 width={"100%"}
-                height={"320px"}
+                height={"190%"}
                 resolutionX={32}
                 resolutionY={32}
                 punch={1}
-               style={{display: imageLoad ? "none" : "block"}}
+                style={{ display: imageLoad ? "none" : "block" }}
               />
 
               <Image
                 src={product.images && product.images[0]?.filepath}
-                objectFit='contain'
-                width='100%'
-                height='100%'
+                objectFit="contain"
+                width="100%"
+                height="100%"
                 alt={product.images && product.images[0]?.filename}
-                style={{ display: !imageLoad ? "none": "block" }}
+                style={{ display: !imageLoad ? "none" : "block" }}
               />
             </Box>
 
@@ -154,6 +154,7 @@ export default function ProductCard({ product }) {
               >
                 Add To Cart
               </GlobalButton>
+
               <GlobalButton
                 onClick={onOpen}
                 mt={2}

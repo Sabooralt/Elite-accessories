@@ -11,7 +11,6 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import ProductCard from "../components/ProductCard";
 

@@ -29,6 +29,8 @@ import Product from "../pages/Product.jsx";
 import { SearchedProducts } from "../components/SearchedProducts.jsx";
 import ProductsLayout from "../layouts/ProductsLayout.jsx";
 import AllProducts from "../pages/AllProducts.jsx";
+import UserLayout from "../layouts/UserLayout.jsx";
+import { Checkout } from "../UserPages/Checkout.jsx";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -45,17 +47,22 @@ const AnimatedRoutes = () => {
             element={!user ? <Login /> : <Navigate to="/" />}
           />
           <Route path="/products" element={<ProductsLayout />}>
-            
             <Route index element={<AllProducts />} />
             <Route path="/products/:productId" element={<Product />} />
-            <Route path="/products/search/results/" element={<SearchedProducts/>}/>
+            <Route
+              path="/products/search/results/"
+              element={<SearchedProducts />}
+            />
           </Route>
           <Route
             path="/register"
             element={!user ? <Register /> : <Navigate to="/" />}
           />
           <Route path="/reviews" element={<Reviews />} />
-          <Route path="/MyCart" element={<MyCart />} />
+          <Route path="/User" element={<UserLayout />}>
+            <Route path="/User/MyCart" element={<MyCart />} />
+            <Route path="/User/Checkout" element={<Checkout />} />
+          </Route>
           <Route path="/help" element={<Help />} />
           <Route path="*" element={<NotFound />} />
         </Route>

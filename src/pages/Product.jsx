@@ -255,8 +255,8 @@ export default function Product() {
 
                 <Text
                   fontSize={"medium"}
-                  maxH="80px"
-                  overflow={"scroll"}
+                  maxH="75px"
+                  overflow={"auto"}
                   textOverflow="ellipsis"
                 >
                   {product.description}

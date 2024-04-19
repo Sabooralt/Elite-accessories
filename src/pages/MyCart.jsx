@@ -41,7 +41,6 @@ export default function MyCart() {
   const handleQuantity = (id, operation) => {
     updateQuantity(id, operation);
   };
-  
 
   const handleClearCart = () => {
     clearCart();
@@ -161,19 +160,31 @@ export default function MyCart() {
                     </Td>
                     <Td>{item && item.product.price}</Td>
                     <Td isNumeric>
-                      <Stack alignItems='center'>
-                        <Box>
-
-                        {item && item.quantity}
-                       
-                        </Box>
+                      <Stack alignItems="center">
+                        <Box>{item && item.quantity}</Box>
                         <HStack w="fit-content">
-                          <Box cursor='pointer' p={1} w="fit-content" bg="primary" onClick={()=> handleQuantity(item._id,"decrement")}>
+                          <Box
+                            cursor="pointer"
+                            p={1}
+                            w="fit-content"
+                            bg="primary"
+                            onClick={() =>
+                              handleQuantity(item._id, "decrement")
+                            }
+                          >
                             <Text fontSize="xx-large" m={0}>
                               -
                             </Text>
                           </Box>
-                          <Box cursor='pointer' p={1} w="fit-content" bg="primary" onClick={()=> handleQuantity(item._id,"increment")}>
+                          <Box
+                            cursor="pointer"
+                            p={1}
+                            w="fit-content"
+                            bg="primary"
+                            onClick={() =>
+                              handleQuantity(item._id, "increment")
+                            }
+                          >
                             <Text fontSize="x-large" m={0}>
                               +
                             </Text>
@@ -241,7 +252,11 @@ export default function MyCart() {
                 <Text fontWeight="600">Rs.{calculateTotal(items)}</Text>
               </Box>
             </Stack>
+
           </Box>
+            <GlobalButton mt={5}>
+              Checkout
+            </GlobalButton>
         </TableContainer>
       ) : (
         <div className="d-flex justify-content-center align-items-center container h-100">

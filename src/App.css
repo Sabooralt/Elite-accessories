@@ -26,7 +26,7 @@ a.active > button {
   font-family: Poppins;
   src: url("../public/fonts/Poppins/Poppins-Regular.ttf");
 }
-::placeholder {
+.customPlaceholder ::placeholder {
   color: #00000030 !important;
   font-size: 1.4rem;
   font-weight: 500;

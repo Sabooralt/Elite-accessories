@@ -94,6 +94,7 @@ export default function RegisterForm() {
               </InputLeftElement>
               <Input
                 type="text"
+                className="customPlaceholder"
                 {...formik.getFieldProps("fullName")}
                 size={"md"}
                 bg={"#D9D9D9"}
@@ -123,6 +124,7 @@ export default function RegisterForm() {
                 <FaRegUser size={18} color="#323030" />
               </InputLeftElement>
               <Input
+              className="customPlaceholder"
                 type="email"
                 {...formik.getFieldProps("email")}
                 size={"md"}
@@ -168,6 +170,7 @@ export default function RegisterForm() {
                 )}
               </InputRightElement>
               <Input
+              className="customPlaceholder"
                 {...formik.getFieldProps("password")}
                 type={`${hidePassword ? "password" : "text"}`}
                 bg={"greyLight"}
@@ -198,6 +201,7 @@ export default function RegisterForm() {
                 <HiOutlineLockClosed size={18} color="#323030" />
               </InputLeftElement>
               <Input
+              className="customPlaceholder"
                 {...formik.getFieldProps("confirmPassword")}
                 bg={"greyLight"}
                 size={"md"}

@@ -79,6 +79,7 @@ navigate('/')
                 <FaRegUser size={18} color="#323030" />
               </InputLeftElement>
               <Input
+              className="customPlaceholder"
                 {...formik.getFieldProps("email")}
                 type="email"
                 size={"md"}
@@ -124,6 +125,7 @@ navigate('/')
                 )}
               </InputRightElement>
               <Input
+              className="customPlaceholder"
                 type={`${hidePassword ? "password" : "text"}`}
                 {...formik.getFieldProps("password")}
                 bg={"greyLight"}

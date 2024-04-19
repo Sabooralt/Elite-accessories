@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Heading } from "@chakra-ui/react";
-import axios from "axios";
-import { Link, Outlet } from "react-router-dom";
 
-function ProductsLayout() {
+import { Outlet } from "react-router-dom";
+
+function UserLayout() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -11,4 +10,4 @@ function ProductsLayout() {
   }, []);
   return <div>{isMounted && <Outlet />}</div>;
 }
-export default ProductsLayout;
+export default UserLayout;
