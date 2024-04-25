@@ -26,8 +26,11 @@ import { GlobalButton } from "../components/GlobalButton";
 import { CiCreditCard1 } from "react-icons/ci";
 import { GiTakeMyMoney } from "react-icons/gi";
 import * as Yup from "yup";
+import { icon } from "@fortawesome/fontawesome-svg-core";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export const Shipping = () => {
+export const Shipping = ({ onSubmit, handleNext, handlePrev }) => {
   const { user } = useAuthContextProvider();
 
   const formik = useFormik({
@@ -51,8 +54,9 @@ export const Shipping = () => {
       state: Yup.string().required("State is required"),
     }),
     onSubmit: (values) => {
-      localStorage.setItem("Shipping Address", values);
-      console.log(values);
+      onSubmit(values);
+
+      handleNext();
     },
   });
 
@@ -63,14 +67,15 @@ export const Shipping = () => {
         onSubmit={formik.handleSubmit}
       >
         <FormControl
-          isRequired
           isInvalid={
             formik.touched.addressLine_1 && formik.errors.addressLine_1
               ? formik.errors.addressLine_1
               : ""
           }
         >
-          <FormLabel>Address Line 1</FormLabel>
+          <FormLabel>
+            Address Line 1 <sup style={{ color: "orangered" }}>*</sup>
+          </FormLabel>
           <Input type="text" {...formik.getFieldProps("addressLine_1")} />
           <FormErrorMessage>
             {formik.touched.addressLine_1 && formik.errors.addressLine_1
@@ -90,14 +95,15 @@ export const Shipping = () => {
         </FormControl>
         <HStack>
           <FormControl
-            isRequired
             isInvalid={
               formik.touched.city && formik.errors.city
                 ? formik.errors.city
                 : ""
             }
           >
-            <FormLabel>City</FormLabel>
+            <FormLabel>
+              City <sup style={{ color: "orangered" }}>*</sup>
+            </FormLabel>
             <Input type="text" {...formik.getFieldProps("city")} />
             <FormErrorMessage>
               {formik.touched.city && formik.errors.city
@@ -105,8 +111,10 @@ export const Shipping = () => {
                 : ""}
             </FormErrorMessage>
           </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Country</FormLabel>
+          <FormControl>
+            <FormLabel>
+              Country <sup style={{ color: "orangered" }}>*</sup>
+            </FormLabel>
             <Input
               type="text"
               value="Pakistan"
@@ -116,25 +124,30 @@ export const Shipping = () => {
           </FormControl>
         </HStack>
         <HStack>
-          <FormControl isRequired>
-            <FormLabel>Full Name</FormLabel>
+          <FormControl>
+            <FormLabel>
+              Full Name <sup style={{ color: "orangered" }}>*</sup>
+            </FormLabel>
             <Input type="text" {...formik.getFieldProps("fullName")} readOnly />
           </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Email</FormLabel>
+          <FormControl>
+            <FormLabel>
+              Email <sup style={{ color: "orangered" }}>*</sup>
+            </FormLabel>
             <Input type="text" {...formik.getFieldProps("email")} readOnly />
           </FormControl>
         </HStack>
         <FormControl
-          isRequired
           isInvalid={
             formik.touched.phoneNumber && formik.errors.phoneNumber
               ? formik.errors.phoneNumber
               : ""
           }
         >
-          <FormLabel>Phone Number</FormLabel>
+          <FormLabel>
+            Phone Number <sup style={{ color: "orangered" }}>*</sup>
+          </FormLabel>
           <InputGroup>
             <InputLeftAddon>+92</InputLeftAddon>
             <Input
@@ -173,9 +186,10 @@ export const Shipping = () => {
                 ? formik.errors.state
                 : ""
             }
-            isRequired
           >
-            <FormLabel>State</FormLabel>
+            <FormLabel>
+              State <sup style={{ color: "orangered" }}>*</sup>
+            </FormLabel>
             <Input type="text" {...formik.getFieldProps("state")} />
 
             <FormErrorMessage>
@@ -191,12 +205,58 @@ export const Shipping = () => {
             Save Shipping Address
           </Button>
         </FormControl>
+        <Box>
+          <Button
+            type="submit"
+            isDisabled={!formik.isValid || !formik.dirty}
+            colorScheme="purple"
+          >
+            Continue To Payment
+          </Button>
+        </Box>
       </form>
     </VStack>
   );
 };
 
-export const Billing = () => {
+export const Billing = ({onSubmit,handleNext}) => {
+  const [selectedMethod, setSelectedMethod] = useState(null);
+  const [paymentMethods,setPaymentMethods] = useState(null);
+
+  useEffect(()=>{
+    const fetchPaymentMethods = async ()=>{
+      try{
+        const response = await axios.get("http://localhost:4000/api/payment-method");
+
+        if(response.status === 201){
+          setPaymentMethods(response.data);
+        }
+        if(response.status === 400){
+          console.log(response.statusText);
+        }
+
+      }catch(err){
+
+        console.log(err)
+
+      }
+    
+
+      
+    }
+    fetchPaymentMethods();
+  },[])
+
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    onSubmit(selectedMethod);
+    handleNext();
+
+
+  };
   return (
     <>
       <VStack
@@ -212,46 +272,77 @@ export const Billing = () => {
             You will not be charged until you review this order on the page.
           </Text>
         </Box>
-        <Card
-          direction="row"
-          sx={{ opacity: 0.7, pointerEvents: "none" }}
-          alignItems="center"
-          px="2"
-          w={"100%"}
+
+        <form style={{width: '100%'}} onSubmit={handleSubmit}>
+          {paymentMethods ? paymentMethods
+            .sort((a, b) => {
+              return b.disabled - a.disabled;
+            })
+            .map((method) => (
+              <Card
+                key={method._id}
+                direction="row"
+                {...(method.disabled && {
+                  sx: { opacity: 0.7, pointerEvents: "none" },
+                })}
+                alignItems="center"
+                p="2"
+                w={"100%"}
+              >
+
+               <GiTakeMyMoney/>
+                <CardBody
+                  display="flex"
+                  flexDir={"row"}
+                  gap="5"
+                  alignItems={"center"}
+                  justifyContent="space-between"
+                >
+                  <Text m={0}>{method.method}</Text>
+
+                  <Radio
+                  onChange={(e)=>setSelectedMethod(e.target.value)}
+                  value={method._id}
+                    checked={selectedMethod === method._id}
+                  />
+                </CardBody>
+              </Card>
+            )): <Heading>Please wait...</Heading>}
+
+        <Text>{selectedMethod}</Text>
+
+
+        <Button
+        type="submit"
+        sx={{ position: "absolute", bottom: 10 }}
+          colorScheme="blue"
+          isDisabled={!selectedMethod}
+        zIndex={20}
         >
-          <CiCreditCard1 />
-          <CardBody
-            display="flex"
-            flexDir={"row"}
-            gap="5"
-            alignItems={"center"}
-            justifyContent="space-between"
-          >
-            <Text>Credit/Debit Card</Text>
-
-            <Radio />
-          </CardBody>
-        </Card>
-        <Card direction="row" alignItems="center" px="2" w={"100%"}>
-          <GiTakeMyMoney />
-          <CardBody
-            display="flex"
-            flexDir={"row"}
-            gap="5"
-            alignItems={"center"}
-            justifyContent="space-between"
-          >
-            <Text>Cash on delivery</Text>
-
-            <Radio defaultChecked />
-          </CardBody>
-        </Card>
+          Order Summary
+        </Button>
+          </form>
       </VStack>
     </>
   );
 };
 
-export const OverView = () => {
+export const OverView = ({paymentMethod,shipping}) => {
+  
+const [paymentMethodData,setPaymentMethodData] = useState([]);
+  useEffect(()=>{
+    const fetchSinglePaymentMethod = async ()=>{
+      const response = await axios.get("http://localhost:4000/api/payment-method/"+paymentMethod);
+
+      if(response.status === 201){
+setPaymentMethodData(response.data);
+      }
+      if(response.status === 400){
+        console.log('nope')
+      }
+    }
+    fetchSinglePaymentMethod();
+  },[])
   return (
     <VStack>
       <Box alignSelf={"baseline"}>
@@ -284,7 +375,7 @@ export const OverView = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Text>Cash on delivery</Text>
+            <Text>{paymentMethodData && paymentMethodData.method}</Text>
             <Radio defaultChecked isDisabled />
           </CardBody>
         </Card>
@@ -311,15 +402,26 @@ export const OverView = () => {
             justifyContent="start"
             alignItems="center"
           >
-            <HStack w='100%' display='flex' justifyContent='space-between' alignItems='center'>
-
-            <Text color='gray.600'>Name</Text>
-            <Text>Saboor Ahmed</Text>
+            <HStack
+              w="100%"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Text color="gray.600">Name</Text>
+              <Text>{shipping && shipping.fullName}</Text>
+            </HStack>
+            <HStack
+              w="100%"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Text color="gray.600">Name</Text>
+              <Text>{shipping && shipping.addressLine_1}</Text>
             </HStack>
           </CardBody>
         </Card>
-
-        
       </VStack>
     </VStack>
   );
