@@ -138,7 +138,7 @@ const updateCartItemQuantity = async (req, res) => {
 
     await cartItem.save();
 
-    res.status(200).json(cartItem);
+    res.status(200).json({_id: cartItem._id, quantity: cartItem.quantity,subtotal: cartItem.subtotal});
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

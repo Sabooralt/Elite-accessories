@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Billing, OverView, Shipping } from "./CheckoutComponents";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCheckoutData } from "../hooks/useCheckoutData";
+import { useLocation } from "react-router-dom";
 
 const steps = [
   { title: "Shipping", description: "Shipping Address" },
@@ -26,6 +27,11 @@ const steps = [
 ];
 
 export const Checkout = () => {
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
+  const orderType = params.get('orderType')
+  
   const [shippingAddress, setShippingAddress] = useState(null);
   const [paymentMethod,setPaymentMethod] = useState(null);
 
@@ -66,7 +72,7 @@ export const Checkout = () => {
       case 1:
         return <Billing onSubmit={handlePaymentMethod} handleNext={handleNext} handlePrev={handlePrev} />;
       case 2:
-        return <OverView paymentMethod={paymentMethod} shipping={shippingAddress} />;
+        return <OverView paymentMethod={paymentMethod} shipping={shippingAddress} orderType={orderType} />;
       default:
         return null;
     }
@@ -92,7 +98,7 @@ export const Checkout = () => {
         index={activeStep}
       >
         {steps.map((step, index) => (
-          <Step key={index}>
+          <Step key={index} onClick={() => setActiveStep(index)}>
             <StepIndicator>
               <StepStatus
                 complete={<StepIcon />}

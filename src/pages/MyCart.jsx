@@ -30,7 +30,7 @@ import { useClearCart } from "../hooks/useClearCart";
 import { useUpdateCartQuantity } from "../hooks/useUpdateCartQuantity";
 
 export default function MyCart() {
-  const { items, dispatch } = useCartContext();
+  const { items, dispatch,total } = useCartContext();
   const { clearCart, isLoading, responseG } = useClearCart();
   const [newQuantity, setNewQuantity] = useState();
   const navigate = useNavigate();
@@ -40,6 +40,7 @@ export default function MyCart() {
   //Handle Quantity
 
   const handleQuantity = (id, operation) => {
+    
     updateQuantity(id, operation);
   };
 
@@ -55,7 +56,7 @@ export default function MyCart() {
         status: responseG.type,
       });
     }
-  });
+  },[responseG]);
 
   const handleItemDelete = async (item) => {
     try {
@@ -131,7 +132,7 @@ export default function MyCart() {
             </Thead>
             <Tbody>
               {items &&
-                items.map((item, product) => (
+                items.map((item) => (
                   <Tr key={item._id}>
                     <Td display="flex">
                       <Image
@@ -193,7 +194,7 @@ export default function MyCart() {
                         </HStack>
                       </Stack>
                     </Td>
-                    <Td isNumeric>Rs.{calculateItemSubtotal(item)}</Td>
+                    <Td isNumeric>Rs.{item.subtotal}</Td>
 
                     <Td isNumeric>
                       <IconButton
@@ -245,19 +246,19 @@ export default function MyCart() {
               </Box>
               <Box className="d-flex flex-direction-row justify-content-between align-items-center w-100">
                 <Text color="#2D3748">Shipping Fee </Text>
-                <Text fontWeight="600">Rs.{calculateTotal(items)}</Text>
+                <Text fontWeight="600">Rs.100</Text>
               </Box>
               <Divider borderColor="#000" />
               <Box className="d-flex flex-direction-row justify-content-between align-items-center w-100">
                 <Text color="#2D3748">Order Total </Text>
-                <Text fontWeight="600">Rs.{calculateTotal(items)}</Text>
+                <Text fontWeight="600">Rs.{total}</Text>
               </Box>
             </Stack>
 
           </Box>
-            <GlobalButton mt={5} onClick={()=> navigate("/user/Checkout")}>
-              Checkout
-            </GlobalButton>
+          <GlobalButton mt={5} onClick={() => navigate(`/user/Checkout?orderType=cart`)}>
+      Checkout
+    </GlobalButton>
         </TableContainer>
       ) : (
         <div className="d-flex justify-content-center align-items-center container h-100">

@@ -19,6 +19,7 @@ import {
   CardHeader,
   Tag,
   TagLabel,
+  useToast,
 } from "@chakra-ui/react";
 import { useAuthContextProvider } from "../hooks/useAuthContext";
 import { useFormik } from "formik";
@@ -27,8 +28,10 @@ import { CiCreditCard1 } from "react-icons/ci";
 import { GiTakeMyMoney } from "react-icons/gi";
 import * as Yup from "yup";
 import { icon } from "@fortawesome/fontawesome-svg-core";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useCheckOut } from "../hooks/useCheckout";
+import { useCartContext } from "../hooks/useCartContext";
 
 export const Shipping = ({ onSubmit, handleNext, handlePrev }) => {
   const { user } = useAuthContextProvider();
@@ -219,43 +222,35 @@ export const Shipping = ({ onSubmit, handleNext, handlePrev }) => {
   );
 };
 
-export const Billing = ({onSubmit,handleNext}) => {
+export const Billing = ({ onSubmit, handleNext }) => {
   const [selectedMethod, setSelectedMethod] = useState(null);
-  const [paymentMethods,setPaymentMethods] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState(null);
 
-  useEffect(()=>{
-    const fetchPaymentMethods = async ()=>{
-      try{
-        const response = await axios.get("http://localhost:4000/api/payment-method");
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/payment-method"
+        );
 
-        if(response.status === 201){
+        if (response.status === 201) {
           setPaymentMethods(response.data);
         }
-        if(response.status === 400){
+        if (response.status === 400) {
           console.log(response.statusText);
         }
-
-      }catch(err){
-
-        console.log(err)
-
+      } catch (err) {
+        console.log(err);
       }
-    
-
-      
-    }
+    };
     fetchPaymentMethods();
-  },[])
-
-
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     onSubmit(selectedMethod);
     handleNext();
-
-
   };
   return (
     <>
@@ -273,78 +268,135 @@ export const Billing = ({onSubmit,handleNext}) => {
           </Text>
         </Box>
 
-        <form style={{width: '100%'}} onSubmit={handleSubmit}>
-          {paymentMethods ? paymentMethods
-            .sort((a, b) => {
-              return b.disabled - a.disabled;
-            })
-            .map((method) => (
-              <Card
-                key={method._id}
-                direction="row"
-                {...(method.disabled && {
-                  sx: { opacity: 0.7, pointerEvents: "none" },
-                })}
-                alignItems="center"
-                p="2"
-                w={"100%"}
-              >
-
-               <GiTakeMyMoney/>
-                <CardBody
-                  display="flex"
-                  flexDir={"row"}
-                  gap="5"
-                  alignItems={"center"}
-                  justifyContent="space-between"
+        <form style={{ width: "100%" }} onSubmit={handleSubmit}>
+          {paymentMethods ? (
+            paymentMethods
+              .sort((a, b) => {
+                return b.disabled - a.disabled;
+              })
+              .map((method) => (
+                <Card
+                  key={method._id}
+                  direction="row"
+                  {...(method.disabled && {
+                    sx: { opacity: 0.7, pointerEvents: "none" },
+                  })}
+                  alignItems="center"
+                  p="2"
+                  w={"100%"}
                 >
-                  <Text m={0}>{method.method}</Text>
+                  <GiTakeMyMoney />
+                  <CardBody
+                    display="flex"
+                    flexDir={"row"}
+                    gap="5"
+                    alignItems={"center"}
+                    justifyContent="space-between"
+                  >
+                    <Text m={0}>{method.method}</Text>
 
-                  <Radio
-                  onChange={(e)=>setSelectedMethod(e.target.value)}
-                  value={method._id}
-                    checked={selectedMethod === method._id}
-                  />
-                </CardBody>
-              </Card>
-            )): <Heading>Please wait...</Heading>}
+                    <Radio
+                      onChange={(e) => setSelectedMethod(e.target.value)}
+                      value={method._id}
+                      isChecked={selectedMethod === method._id}
+                    />
+                  </CardBody>
+                </Card>
+              ))
+          ) : (
+            <Heading>Please wait...</Heading>
+          )}
 
-        <Text>{selectedMethod}</Text>
+          <Text>{selectedMethod}</Text>
 
-
-        <Button
-        type="submit"
-        sx={{ position: "absolute", bottom: 10 }}
-          colorScheme="blue"
-          isDisabled={!selectedMethod}
-        zIndex={20}
-        >
-          Order Summary
-        </Button>
-          </form>
+          <Button
+            type="submit"
+            sx={{ position: "absolute", bottom: 10 }}
+            colorScheme="blue"
+            isDisabled={!selectedMethod}
+            zIndex={20}
+          >
+            Order Summary
+          </Button>
+        </form>
       </VStack>
     </>
   );
 };
 
-export const OverView = ({paymentMethod,shipping}) => {
-  
-const [paymentMethodData,setPaymentMethodData] = useState([]);
-  useEffect(()=>{
-    const fetchSinglePaymentMethod = async ()=>{
-      const response = await axios.get("http://localhost:4000/api/payment-method/"+paymentMethod);
+export const OverView = ({ paymentMethod, shipping, orderType }) => {
+  const [paymentMethodData, setPaymentMethodData] = useState(null);
+  const [orderBtn, setOrderBtn] = useState(true);
+  const [order, setOrder] = useState(null);
+  const { items } = useCartContext();
+  const { isLoading, responseG, Checkout } = useCheckOut();
+  const toast = useToast();
+  const toastIdRef = useRef();
 
-      if(response.status === 201){
-setPaymentMethodData(response.data);
+  useEffect(() => {
+    const fetchSinglePaymentMethod = async () => {
+      const response = await axios.get(
+        "http://localhost:4000/api/payment-method/" + paymentMethod
+      );
+
+      if (response.status === 201) {
+        setPaymentMethodData(response.data);
       }
-      if(response.status === 400){
-        console.log('nope')
+      if (response.status === 400) {
+        console.log("nope");
+      }
+    };
+    fetchSinglePaymentMethod();
+  }, []);
+
+  useEffect(() => {
+    if (orderType === "cart") {
+      setOrder({
+        cartItems: items.map((item) => ({
+          productId: item.product._id,
+          quantity: item.quantity,
+          color: item.color !== null ? item.color : "Default",
+        })),
+        orderType: "cart",
+      });
+    } else if (orderType === "singleProduct") {
+      console.log("sd");
+    } else {
+      console.log("invalid orderType");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      toastIdRef.current = toast({
+        status: "loading",
+        title: "Order processing",
+        description: "Please wait...",
+        isClosable: false
+      });
+    } else {
+      if (responseG) {
+        if (toastIdRef.current) {
+          toast.update(toastIdRef.current, {
+            description: responseG.message,
+            status: responseG.type,
+            isClosable: true,
+            duration: 3000,
+            
+          });
+        }
       }
     }
-    fetchSinglePaymentMethod();
-  },[])
+  }, [isLoading, responseG, toast]);
+
+  const handlePlaceOrder = async () => {
+    if (order) {
+      await Checkout(order);
+    }
+  };
+
   return (
-    <VStack>
+    <VStack width="100%" flexWrap="wrap">
       <Box alignSelf={"baseline"}>
         <Heading size={"lg"}>Please confirm and submit your order</Heading>
         <Text m={0} color={"gray.600"}>
@@ -375,8 +427,11 @@ setPaymentMethodData(response.data);
             justifyContent="space-between"
             alignItems="center"
           >
-            <Text>{paymentMethodData && paymentMethodData.method}</Text>
-            <Radio defaultChecked isDisabled />
+            <Text>
+              {paymentMethodData
+                ? paymentMethodData.method
+                : "Payment method not selected!"}
+            </Text>
           </CardBody>
         </Card>
 
@@ -402,27 +457,56 @@ setPaymentMethodData(response.data);
             justifyContent="start"
             alignItems="center"
           >
-            <HStack
-              w="100%"
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Text color="gray.600">Name</Text>
-              <Text>{shipping && shipping.fullName}</Text>
-            </HStack>
-            <HStack
-              w="100%"
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Text color="gray.600">Name</Text>
-              <Text>{shipping && shipping.addressLine_1}</Text>
-            </HStack>
+            <VStack spacing={5}>
+              {shipping ? (
+                <>
+                  <HStack
+                    w="100%"
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Text color="gray.600">Name</Text>
+                    <Text>{shipping && shipping.fullName}</Text>
+                  </HStack>
+
+                  <HStack
+                    w="100%"
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Text m={0} display="inline-block" color="gray.600">
+                      Address
+                    </Text>
+                    <Text
+                      textOverflow="ellipsis"
+                      overflow="hidden"
+                      width="70%"
+                      textAlign="right"
+                      maxH="50px"
+                    >
+                      {shipping.addressLine_1}
+                    </Text>
+                  </HStack>
+                </>
+              ) : (
+                <Text m={0}>Shipping Address not available</Text>
+              )}
+            </VStack>
           </CardBody>
         </Card>
       </VStack>
+
+      <Button
+        isDisabled={!orderBtn}
+        onClick={() => handlePlaceOrder()}
+        colorScheme="purple"
+        isLoading={isLoading}
+        loadingText="Placing order"
+      >
+        Place Order
+      </Button>
     </VStack>
   );
 };
